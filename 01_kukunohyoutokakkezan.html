@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>九九の表とかけ算</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=M+PLUS+Rounded+1c:wght@400;700;900&display=swap');
+
+:root {
+  --yellow: #FFD93D;
+  --orange: #FF6B35;
+  --blue: #4ECDC4;
+  --purple: #A78BFA;
+  --green: #6BCB77;
+  --pink: #FF8FAB;
+  --bg: #FFFDF5;
+  --card: #FFFFFF;
+  --text: #2D2D2D;
+  --text2: #666;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'M PLUS Rounded 1c', 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding: 1.5rem 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, #FFF3B0 0%, #FFD93D 60%, #FF6B35 100%);
+  border-radius: 24px;
+  padding: 2rem 1.75rem 1.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '✕';
+  position: absolute;
+  font-size: 120px;
+  font-weight: 900;
+  color: rgba(255,255,255,0.18);
+  right: -10px;
+  top: -20px;
+  line-height: 1;
+}
+.hero-label {
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(255,255,255,0.5);
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 20px;
+  color: #b84f00;
+  margin-bottom: 10px;
+  letter-spacing: 0.05em;
+}
+.hero h1 {
+  font-size: 26px;
+  font-weight: 900;
+  color: #3d1f00;
+  line-height: 1.3;
+  margin-bottom: 8px;
+}
+.hero-sub {
+  font-size: 14px;
+  color: #7a3b00;
+  font-weight: 700;
+}
+
+/* Section header */
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 1.5rem 0 0.75rem;
+}
+.sec-num {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 900;
+  flex-shrink: 0;
+  color: #fff;
+}
+.sec-title {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+/* Cards */
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 10px;
+  border: 2px solid transparent;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* Point rows */
+.pt {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 6px;
+}
+.pt:last-child { margin-bottom: 0; }
+.pt-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Formula chip */
+.chip {
+  display: inline-block;
+  background: #FFF3B0;
+  border: 2px solid #FFD93D;
+  border-radius: 8px;
+  padding: 1px 10px;
+  font-size: 14px;
+  font-weight: 700;
+  margin: 2px 2px;
+  color: #7a5000;
+}
+.chip.blue { background: #E0F8F6; border-color: #4ECDC4; color: #1a6b67; }
+.chip.purple { background: #EDE9FE; border-color: #A78BFA; color: #4c2ea8; }
+.chip.green { background: #E8F9EA; border-color: #6BCB77; color: #1f6b28; }
+.chip.pink { background: #FFF0F4; border-color: #FF8FAB; color: #9b2548; }
+.chip.orange { background: #FFF0E8; border-color: #FF6B35; color: #9b3b0f; }
+
+/* Mame (豆知識) box */
+.mame {
+  background: #F0FDFA;
+  border: 2px dashed #4ECDC4;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 13px;
+  color: #1a6b67;
+  margin-top: 8px;
+  line-height: 1.7;
+}
+.mame-head { font-weight: 900; margin-bottom: 2px; }
+
+/* Example box */
+.ex {
+  background: #FFFBEA;
+  border: 2px solid #FFD93D;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 13px;
+  margin-top: 8px;
+  line-height: 1.8;
+}
+.ex-head { font-weight: 900; color: #7a5000; margin-bottom: 2px; font-size: 12px; }
+
+/* Summary banner */
+.summary {
+  background: linear-gradient(135deg, #EDE9FE, #DDD6FE);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  margin-top: 1.5rem;
+  border: 2px solid #A78BFA;
+}
+.summary-head {
+  font-size: 15px;
+  font-weight: 900;
+  color: #4c2ea8;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.summary p {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #3d2a6b;
+}
+
+/* Flow */
+.flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0 4px;
+}
+.fbox {
+  background: #fff;
+  border: 2px solid #A78BFA;
+  border-radius: 10px;
+  padding: 5px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #4c2ea8;
+}
+.farrow { color: #A78BFA; font-size: 18px; font-weight: 900; }
+
+/* Table hint */
+.table-hint {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  margin: 10px 0 6px;
+}
+.th-cell {
+  background: #FFF3B0;
+  border-radius: 6px;
+  text-align: center;
+  padding: 5px 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #7a5000;
+  border: 1.5px solid #FFD93D;
+}
+.th-cell.hi {
+  background: #FF6B35;
+  color: #fff;
+  border-color: #FF6B35;
+}
+.th-cell.gray {
+  background: #f0f0ee;
+  color: #888;
+  border-color: #ddd;
+}
+
+@keyframes pop { 0%{transform:scale(0.85);opacity:0} 100%{transform:scale(1);opacity:1} }
+.card { animation: pop 0.3s ease both; }
+.card:nth-child(1){animation-delay:.05s}
+.card:nth-child(2){animation-delay:.1s}
+.card:nth-child(3){animation-delay:.15s}
+.card:nth-child(4){animation-delay:.2s}
+
+  /* ===== SITES BAR ===== */
+  .sites-bar { background:#fff; border-bottom:1px solid #e0e0e0; padding:0 16px; height:46px; display:flex; align-items:center; gap:10px; position:sticky; top:0; z-index:200; box-shadow:0 1px 4px rgba(0,0,0,0.08); }
+  .sites-logo { font-size:0.8rem; color:#5f6368; display:flex; align-items:center; gap:6px; }
+  .sites-logo-icon { width:20px; height:20px; background:#1a73e8; border-radius:3px; display:flex; align-items:center; justify-content:center; color:white; font-weight:900; font-size:12px; }
+  .sites-title { font-size:0.95rem; font-weight:500; color:#202124; flex:1; }
+  .sites-badge { font-size:0.7rem; background:#e8f0fe; color:#1a73e8; padding:3px 10px; border-radius:50px; font-weight:600; }
+  .back-bar { background:linear-gradient(135deg,#e8f0fe,#c7d9ff); padding:10px 20px; }
+  .back-btn { display:inline-flex; align-items:center; gap:4px; background:rgba(255,255,255,0.7); border:none; border-radius:50px; padding:6px 16px; color:#1a3a8f; font-size:0.82rem; font-weight:900; cursor:pointer; text-decoration:none; font-family:inherit; transition:background 0.15s; }
+  .back-btn:hover { background:rgba(255,255,255,0.95); }
+</style>
+</head>
+<body>
+<!-- Sitesツールバー -->
+<div class="sites-bar">
+  <div class="sites-logo">
+    <div class="sites-logo-icon">S</div>
+    <span>Google サイト</span>
+  </div>
+  <div class="sites-title">算数ひろば｜文関小学校</div>
+  <span class="sites-badge">🔒 リンクを知る人のみ</span>
+</div>
+<!-- 戻るボタン -->
+<div class="back-bar">
+  <a class="back-btn" href="index.html">← ホームへ戻る</a>
+</div>
+
+
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-label">3年生　算数　単元1</div>
+  <h1>九九の表とかけ算 ✕</h1>
+  <div class="hero-sub">5時間で学ぶ！かけ算のひみつを見つけよう</div>
+</div>
+
+<!-- Section 1 -->
+<div class="sec-head">
+  <div class="sec-num" style="background:#FF6B35;">1</div>
+  <div class="sec-title">かけ算のきまりを見つけよう</div>
+</div>
+
+<div class="card" style="border-color:#FFD93D;">
+  <div class="pt"><span class="pt-icon">👀</span><div><b>九九の表を見て気づこう！</b></div></div>
+  <div class="pt"><span class="pt-icon">📌</span>
+    <div>かける数が <b>1 ふえる</b> と、答えはかけられる数だけ<b>大きく</b>なる<br>
+    <span class="chip">7 × 3 = 21</span> → <span class="chip">7 × 4 = 28</span>（＋7）</div>
+  </div>
+  <div class="pt"><span class="pt-icon">📌</span>
+    <div>かける数が <b>1 へる</b> と、答えはかけられる数だけ<b>小さく</b>なる<br>
+    <span class="chip">7 × 4 = 28</span> → <span class="chip">7 × 3 = 21</span>（－7）</div>
+  </div>
+
+  <div class="ex">
+    <div class="ex-head">🎮 数あてゲームの例（7の段）</div>
+    28、35、<b>□</b>、49、56 → 差が <b>7</b> ずつ → <b>□ = 42</b>
+    <br>このきまりは7の段だけじゃなく、<b>全部の段</b>に当てはまるよ！
+  </div>
+</div>
+
+<!-- Section 2 -->
+<div class="sec-head">
+  <div class="sec-num" style="background:#4ECDC4;">2</div>
+  <div class="sec-title">10 のかけ算</div>
+</div>
+
+<div class="card" style="border-color:#4ECDC4;">
+  <div class="pt"><span class="pt-icon">💡</span><div><b>2つの考え方があるよ！</b></div></div>
+  <div class="pt"><span class="pt-icon">①</span>
+    <div><span class="chip blue">3 × 10</span> は「3 × 9 より 3 大きい」<br>
+    3 × 9 = 27 → 27 ＋ 3 = <span class="chip blue">30</span></div>
+  </div>
+  <div class="pt"><span class="pt-icon">②</span>
+    <div><span class="chip blue">10 × 3</span> は「10 を 3 つ合わせる」<br>
+    10 ＋ 10 ＋ 10 = <span class="chip blue">30</span></div>
+  </div>
+  <div class="pt"><span class="pt-icon">🔄</span>
+    <div>交かん法そくを使うと <span class="chip blue">3 × 10 ＝ 10 × 3</span>　どちらも同じ！</div>
+  </div>
+  <div class="pt"><span class="pt-icon">⭐</span>
+    <div><span class="chip blue">10 × 10 ＝ 100</span></div>
+  </div>
+</div>
+
+<!-- Section 3 -->
+<div class="sec-head">
+  <div class="sec-num" style="background:#A78BFA;">3</div>
+  <div class="sec-title">0 のかけ算</div>
+</div>
+
+<div class="card" style="border-color:#A78BFA;">
+  <div class="pt"><span class="pt-icon">🎯</span><div><b>どんな数に 0 をかけても 0 ！</b></div></div>
+  <div class="pt"><span class="pt-icon">①</span>
+    <div><span class="chip purple">5 × 0</span> は「5 × 1 より 5 小さい」<br>
+    5 × 1 = 5 → 5 － 5 = <span class="chip purple">0</span></div>
+  </div>
+  <div class="pt"><span class="pt-icon">②</span>
+    <div><span class="chip purple">0 × 2</span> は「0 が 2 つ」<br>
+    0 ＋ 0 = <span class="chip purple">0</span></div>
+  </div>
+
+  <div class="mame">
+    <div class="mame-head">📝 まとめ</div>
+    <span class="chip purple" style="font-size:13px;">どんな数 × 0 ＝ 0</span>
+    　　
+    <span class="chip purple" style="font-size:13px;">0 × どんな数 ＝ 0</span>
+    <br>ゲームで 0 点のところに何個入れても 0 点と同じ考え方だよ！
+  </div>
+</div>
+
+<!-- Section 4 -->
+<div class="sec-head">
+  <div class="sec-num" style="background:#6BCB77;">4</div>
+  <div class="sec-title">□ にあてはまる数のみつけ方</div>
+</div>
+
+<div class="card" style="border-color:#6BCB77;">
+  <div class="pt"><span class="pt-icon">❓</span><div><b><span class="chip green">6 × □ ＝ 24</span> や <span class="chip green">□ × 7 ＝ 21</span> の□を求めよう</b></div></div>
+
+  <div style="margin: 6px 0 4px; font-size:13px; font-weight:700; color:#1f6b28;">方法① 九九の表を使う</div>
+  <div class="pt"><span class="pt-icon">👉</span><div>6 × □ ＝ 24 なら、九九の表の「6 の行」を見て 24 をさがす → <span class="chip green">□ ＝ 4</span></div></div>
+
+  <div style="margin: 6px 0 4px; font-size:13px; font-weight:700; color:#1f6b28;">方法② 交かん法そくを使う</div>
+  <div class="pt"><span class="pt-icon">👉</span><div>□ × 7 ＝ 21 → 7 × □ ＝ 21 に直して、7 の段から <span class="chip green">□ ＝ 3</span></div></div>
+
+  <div class="mame">
+    <div class="mame-head">🔗 次の学習とのつながり</div>
+    この「□ にあてはまる数」をみつける考え方は、次の<b>わり算</b>（÷）の答えを求めるときにそのまま使うよ！
+  </div>
+</div>
+
+<!-- Section 5 -->
+<div class="sec-head">
+  <div class="sec-num" style="background:#FF8FAB;">5</div>
+  <div class="sec-title">九九の表を広げよう（やってみよう）</div>
+</div>
+
+<div class="card" style="border-color:#FF8FAB;">
+  <div class="pt"><span class="pt-icon">📊</span><div><b>0 の段・10 の段を加えた「拡大版 九九の表」を作ろう！</b></div></div>
+
+  <div class="table-hint">
+    <div class="th-cell gray">×</div>
+    <div class="th-cell gray">…</div>
+    <div class="th-cell hi">9</div>
+    <div class="th-cell hi">10</div>
+    <div class="th-cell gray">0</div>
+    <div class="th-cell gray">…</div>
+    <div class="th-cell">0</div>
+    <div class="th-cell hi">0</div>
+    <div class="th-cell gray">…</div>
+    <div class="th-cell gray">…</div>
+    <div class="th-cell">…</div>
+    <div class="th-cell hi">…</div>
+    <div class="th-cell hi">10</div>
+    <div class="th-cell gray">…</div>
+    <div class="th-cell">90</div>
+    <div class="th-cell hi">100</div>
+  </div>
+
+  <div class="pt"><span class="pt-icon">💬</span><div>0 の段はぜんぶ <span class="chip pink">0</span></div></div>
+  <div class="pt"><span class="pt-icon">💬</span><div>10 の段はその数のあとに <span class="chip pink">0</span> をつけた数</div></div>
+  <div class="pt"><span class="pt-icon">💬</span><div>11 の段、12 の段もつくれそう！　→ 表はどこまでも広げられる</div></div>
+</div>
+
+<!-- Summary -->
+<div class="summary">
+  <div class="summary-head">⭐ この単元で学んだいちばん大切なこと</div>
+
+  <div class="flow">
+    <div class="fbox">かけ算のきまり</div>
+    <div class="farrow">➜</div>
+    <div class="fbox">10のかけ算</div>
+    <div class="farrow">➜</div>
+    <div class="fbox">0のかけ算</div>
+    <div class="farrow">➜</div>
+    <div class="fbox">□の数さがし</div>
+  </div>
+
+  <p>
+    「かける数が 1 ふえると答えがかけられる数だけ大きくなる」というきまりを使って、
+    10 のかけ算・0 のかけ算まで考えられるようになったね。<br>
+    <b>□ × ○ ＝ △ の□をみつける</b> 練習は、次の<b>わり算</b>にそのままつながるよ！
+  </p>
+</div>
+
+</div>
+</body>
+</html>
