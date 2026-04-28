@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>折れ線グラフ まとめ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap');
+
+  :root {
+    --blue: #2D7DD2;
+    --sky: #EAF4FF;
+    --teal: #1AAB8A;
+    --teal-light: #E0F7F2;
+    --amber: #F5A623;
+    --amber-light: #FFF6E0;
+    --coral: #E8553D;
+    --coral-light: #FEF0ED;
+    --purple: #7B5EA7;
+    --purple-light: #F0EBFA;
+    --green: #3E9B3F;
+    --green-light: #ECF7EC;
+    --gray: #f5f5f0;
+    --text: #1a1a2e;
+    --text-muted: #666;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #fafaf7;
+    color: var(--text);
+    line-height: 1.7;
+    padding-bottom: 3rem;
+  }
+
+  /* Header */
+  .hero {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2D7DD2 60%, #1AAB8A 100%);
+    color: white;
+    padding: 2.5rem 1.5rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='white' stroke-opacity='.06' stroke-width='1'%3E%3Cpath d='M10 50 L20 30 L30 40 L40 15 L50 25'/%3E%3C/g%3E%3C/svg%3E") repeat;
+  }
+  .hero-unit { font-size: 12px; letter-spacing: 3px; opacity: .7; margin-bottom: 6px; }
+  .hero-title {
+    font-size: clamp(28px, 6vw, 42px);
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+  .hero-sub { font-size: 14px; opacity: .8; }
+  .hero-hours {
+    display: inline-block;
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 99px;
+    font-size: 12px;
+    padding: 4px 14px;
+    margin-top: 10px;
+  }
+
+  /* Layout */
+  .container { max-width: 700px; margin: 0 auto; padding: 0 1rem; }
+
+  /* Section headers */
+  .section { margin-top: 2rem; }
+  .sec-label {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 12px;
+  }
+  .num-bubble {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 900;
+    flex-shrink: 0;
+  }
+  .sec-title { font-size: 18px; font-weight: 700; }
+
+  /* Cards */
+  .card {
+    background: white;
+    border-radius: 14px;
+    padding: 1.2rem 1.4rem;
+    border: 1.5px solid #eee;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  }
+
+  /* Two-col grid */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 480px) { .grid2 { grid-template-columns: 1fr; } }
+
+  /* Mini cards */
+  .mini {
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .mini-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; }
+  .mini-body { font-size: 13px; line-height: 1.6; }
+
+  /* Callout / tip boxes */
+  .tip {
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-top: 10px;
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .tip-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* SVG mini graphs */
+  .graph-demo { background: white; border-radius: 12px; border: 1.5px solid #eee; padding: 14px; }
+  .graph-title { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 700; }
+
+  /* Steps */
+  .steps { display: flex; flex-direction: column; gap: 8px; }
+  .step {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--gray);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+  .step-n {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: white;
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* table */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { border: 1px solid #e0e0d8; padding: 8px 12px; }
+  th { background: var(--gray); font-weight: 700; }
+
+  /* Big point highlight */
+  .big-point {
+    font-size: 16px; font-weight: 700;
+    background: var(--sky);
+    border-left: 4px solid var(--blue);
+    border-radius: 0 10px 10px 0;
+    padding: 10px 16px;
+    margin: 10px 0;
+  }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    border-radius: 99px;
+    font-size: 11px; font-weight: 700;
+    padding: 3px 10px;
+    margin-right: 4px;
+  }
+
+  /* Check list */
+  .chklist { list-style: none; padding: 0; }
+  .chklist li {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 8px 0; border-bottom: 1px solid #eee;
+    font-size: 14px;
+  }
+  .chklist li:last-child { border-bottom: none; }
+  .chk { color: var(--teal); font-size: 17px; flex-shrink: 0; margin-top: 1px; }
+
+  /* Summary card at bottom */
+  .summary-card {
+    background: linear-gradient(135deg, #1e3a5f, #2D7DD2);
+    color: white;
+    border-radius: 16px;
+    padding: 1.5rem 1.6rem;
+    margin-top: 2rem;
+  }
+  .summary-title { font-size: 17px; font-weight: 700; margin-bottom: 12px; }
+  .sum-item {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.15);
+    font-size: 14px;
+  }
+  .sum-item:last-child { border-bottom: none; }
+  .sum-dot { width: 8px; height: 8px; border-radius: 50%; background: #7ee8d0; flex-shrink: 0; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-unit">わくわく算数 4年上 ▶ 第2単元</div>
+  <div class="hero-title">折れ線グラフ 📈</div>
+  <div class="hero-sub">変化の様子をひとめでわかるグラフを学ぼう！</div>
+  <div class="hero-hours">全7時間</div>
+</div>
+
+<div class="container">
+
+  <!-- ① 折れ線グラフとは -->
+  <div class="section">
+    <div class="sec-label">
+      <div class="num-bubble" style="background:var(--blue);color:white;">①</div>
+      <div class="sec-title">折れ線グラフってなに？</div>
+    </div>
+    <div class="card">
+      <div class="big-point">量の大きさを <strong>点</strong> で表して、それを <strong>直線</strong> でつないだグラフ。<br>時間とともに変わる様子をよみとるのにぴったり！</div>
+
+      <div class="grid2" style="margin-top:12px;">
+        <div class="mini" style="background:var(--sky);">
+          <div class="mini-label" style="color:var(--blue);">📊 棒グラフ</div>
+          <div class="mini-body">量の大きさを<strong>棒の長さ</strong>で表す。<br>大きい・小さいを<strong>くらべるとき</strong>に向いている。</div>
+        </div>
+        <div class="mini" style="background:var(--teal-light);">
+          <div class="mini-label" style="color:var(--teal);">📈 折れ線グラフ</div>
+          <div class="mini-body">量の大きさを<strong>点の位置</strong>で表す。<br>時間とともに<strong>変わる様子</strong>をよむのに向いている。</div>
+        </div>
+      </div>
+
+      <!-- mini demo SVG -->
+      <div style="margin-top:14px;">
+        <div class="graph-title" style="text-align:center;">1日の気温の変わり方（例）</div>
+        <svg width="100%" viewBox="0 0 460 160" xmlns="http://www.w3.org/2000/svg">
+          <!-- grid -->
+          <line x1="60" y1="20" x2="60" y2="130" stroke="#ddd" stroke-width="1"/>
+          <line x1="60" y1="130" x2="440" y2="130" stroke="#ddd" stroke-width="1"/>
+          <line x1="60" y1="100" x2="440" y2="100" stroke="#eee" stroke-width="0.8" stroke-dasharray="4 3"/>
+          <line x1="60" y1="70" x2="440" y2="70" stroke="#eee" stroke-width="0.8" stroke-dasharray="4 3"/>
+          <line x1="60" y1="40" x2="440" y2="40" stroke="#eee" stroke-width="0.8" stroke-dasharray="4 3"/>
+          <!-- labels y -->
+          <text x="48" y="133" text-anchor="end" font-size="11" fill="#999">0</text>
+          <text x="48" y="103" text-anchor="end" font-size="11" fill="#999">10</text>
+          <text x="48" y="73" text-anchor="end" font-size="11" fill="#999">20</text>
+          <text x="48" y="43" text-anchor="end" font-size="11" fill="#999">30</text>
+          <text x="30" y="90" text-anchor="middle" font-size="10" fill="#888" transform="rotate(-90 30 90)">気温(度)</text>
+          <!-- labels x -->
+          <text x="80" y="146" text-anchor="middle" font-size="11" fill="#888">9時</text>
+          <text x="140" y="146" text-anchor="middle" font-size="11" fill="#888">10時</text>
+          <text x="200" y="146" text-anchor="middle" font-size="11" fill="#888">11時</text>
+          <text x="260" y="146" text-anchor="middle" font-size="11" fill="#888">12時</text>
+          <text x="320" y="146" text-anchor="middle" font-size="11" fill="#888">13時</text>
+          <text x="380" y="146" text-anchor="middle" font-size="11" fill="#888">14時</text>
+          <!-- data: 15, 16, 18, 21, 22, 21 (度) → y = 130 - val*3 -->
+          <!-- 15→85, 16→82, 18→76, 21→67, 22→64, 21→67 -->
+          <polyline points="80,85 140,82 200,76 260,67 320,64 380,67" fill="none" stroke="#2D7DD2" stroke-width="2.5" stroke-linejoin="round"/>
+          <!-- dots -->
+          <circle cx="80"  cy="85" r="4" fill="white" stroke="#2D7DD2" stroke-width="2"/>
+          <circle cx="140" cy="82" r="4" fill="white" stroke="#2D7DD2" stroke-width="2"/>
+          <circle cx="200" cy="76" r="4" fill="white" stroke="#2D7DD2" stroke-width="2"/>
+          <circle cx="260" cy="67" r="4" fill="white" stroke="#2D7DD2" stroke-width="2"/>
+          <circle cx="320" cy="64" r="4" fill="white" stroke="#2D7DD2" stroke-width="2"/>
+          <circle cx="380" cy="67" r="4" fill="white" stroke="#2D7DD2" stroke-width="2"/>
+          <!-- labels -->
+          <text x="80"  y="78" text-anchor="middle" font-size="10" fill="#2D7DD2">15</text>
+          <text x="140" y="75" text-anchor="middle" font-size="10" fill="#2D7DD2">16</text>
+          <text x="200" y="69" text-anchor="middle" font-size="10" fill="#2D7DD2">18</text>
+          <text x="260" y="60" text-anchor="middle" font-size="10" fill="#2D7DD2">21</text>
+          <text x="320" y="57" text-anchor="middle" font-size="10" fill="#2D7DD2">22</text>
+          <text x="380" y="60" text-anchor="middle" font-size="10" fill="#2D7DD2">21</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② よみ方 -->
+  <div class="section">
+    <div class="sec-label">
+      <div class="num-bubble" style="background:var(--teal);color:white;">②</div>
+      <div class="sec-title">折れ線グラフのよみ方</div>
+    </div>
+    <div class="card">
+
+      <!-- 線の向きと意味 -->
+      <div style="font-size:14px; font-weight:700; margin-bottom:10px;">🔍 線の向きで変化がわかる</div>
+
+      <!-- フルワイドSVG：グラフ本体を中央に、ラベルを上下の余白エリアに配置 -->
+      <svg width="100%" viewBox="0 0 460 230" xmlns="http://www.w3.org/2000/svg">
+        <!-- 軸 -->
+        <line x1="60" y1="55" x2="60" y2="165" stroke="#bbb" stroke-width="1.2"/>
+        <line x1="60" y1="165" x2="430" y2="165" stroke="#bbb" stroke-width="1.2"/>
+        <!-- グリッド横線 -->
+        <line x1="60" y1="100" x2="430" y2="100" stroke="#eee" stroke-width="0.8" stroke-dasharray="4 3"/>
+        <line x1="60" y1="135" x2="430" y2="135" stroke="#eee" stroke-width="0.8" stroke-dasharray="4 3"/>
+
+        <!-- グラフ折れ線：3つのセグメント（右上がり・水平・右下がり） -->
+        <!-- 点の座標: A(80,150) B(165,90) C(245,90) D(330,60) E(410,130) -->
+        <polyline points="80,150 165,90 245,90 330,60 410,130"
+                  fill="none" stroke="#E8553D" stroke-width="3" stroke-linejoin="round"/>
+        <!-- 点 -->
+        <circle cx="80"  cy="150" r="5" fill="white" stroke="#E8553D" stroke-width="2.2"/>
+        <circle cx="165" cy="90"  r="5" fill="white" stroke="#E8553D" stroke-width="2.2"/>
+        <circle cx="245" cy="90"  r="5" fill="white" stroke="#888"    stroke-width="2.2"/>
+        <circle cx="330" cy="60"  r="5" fill="white" stroke="#E8553D" stroke-width="2.2"/>
+        <circle cx="410" cy="130" r="5" fill="white" stroke="#2D7DD2" stroke-width="2.2"/>
+
+        <!-- ① 右上がりゾーン：ラベルをグラフの上（y=30付近）にリーダー線付きで -->
+        <!-- セグメント中点 (80+165)/2=122, y=(150+90)/2=120 → ラベルはy=28 -->
+        <line x1="122" y1="120" x2="122" y2="38" stroke="#E8553D" stroke-width="1" stroke-dasharray="3 3"/>
+        <rect x="72" y="10" width="102" height="26" rx="6" fill="#FEF0ED" stroke="#E8553D" stroke-width="1"/>
+        <text x="81" y="20" font-size="12" font-weight="700" fill="#E8553D">↗ 右上がり</text>
+        <text x="81" y="32" font-size="11" fill="#c0391e">量が ふえている</text>
+
+        <!-- ② 水平ゾーン：ラベルをグラフの上（y=28付近）にリーダー線付きで -->
+        <!-- セグメント中点 (165+245)/2=205, y=90 → ラベルはy=28 -->
+        <line x1="205" y1="90" x2="205" y2="38" stroke="#888" stroke-width="1" stroke-dasharray="3 3"/>
+        <rect x="164" y="10" width="84" height="26" rx="6" fill="#F5F5F0" stroke="#aaa" stroke-width="1"/>
+        <text x="173" y="20" font-size="12" font-weight="700" fill="#555">→ 水平</text>
+        <text x="170" y="32" font-size="11" fill="#666">変わっていない</text>
+
+        <!-- ③ 右下がりゾーン：ラベルをグラフの下（y=200付近）にリーダー線付きで -->
+        <!-- セグメント中点 (330+410)/2=370, y=(60+130)/2=95 → ラベルはy=195 -->
+        <line x1="370" y1="95"  x2="370" y2="180" stroke="#2D7DD2" stroke-width="1" stroke-dasharray="3 3"/>
+        <rect x="317" y="182" width="110" height="26" rx="6" fill="#EAF4FF" stroke="#2D7DD2" stroke-width="1"/>
+        <text x="326" y="192" font-size="12" font-weight="700" fill="#2D7DD2">↘ 右下がり</text>
+        <text x="329" y="204" font-size="11" fill="#185FA5">量が へっている</text>
+      </svg>
+
+      <!-- 傾きの大切さ -->
+      <div style="font-size:14px; font-weight:700; margin: 14px 0 8px;">📐 かたむきで変化の大きさがわかる！</div>
+      <div class="grid2">
+        <div class="graph-demo">
+          <div class="graph-title" style="color:var(--coral);">急なかたむき → 変わり方が<strong>大きい</strong></div>
+          <!-- ラベル「急！」をグラフ線の頂点より上の余白に置き、線とかぶらないよう viewBox を縦に広く -->
+          <svg width="100%" viewBox="0 0 160 100">
+            <line x1="20" y1="88" x2="150" y2="88" stroke="#ddd" stroke-width="1"/>
+            <line x1="20" y1="88" x2="20" y2="10" stroke="#ddd" stroke-width="1"/>
+            <!-- 折れ線: 急な上昇→急な下降 -->
+            <polyline points="30,82 80,28 130,82" fill="none" stroke="#E8553D" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle cx="30" cy="82" r="4" fill="white" stroke="#E8553D" stroke-width="2"/>
+            <circle cx="80" cy="28" r="4" fill="white" stroke="#E8553D" stroke-width="2"/>
+            <circle cx="130" cy="82" r="4" fill="white" stroke="#E8553D" stroke-width="2"/>
+            <!-- ラベル：頂点の真上・グラフ線から離れた位置（y=14）に白背景付きで -->
+            <rect x="55" y="5" width="52" height="17" rx="4" fill="#FEF0ED"/>
+            <text x="81" y="17" text-anchor="middle" font-size="11" font-weight="700" fill="#E8553D">急！ 大きい</text>
+          </svg>
+        </div>
+        <div class="graph-demo">
+          <div class="graph-title" style="color:var(--teal);">ゆるやかなかたむき → 変わり方が<strong>小さい</strong></div>
+          <!-- ラベルをグラフ線の下の余白に置く -->
+          <svg width="100%" viewBox="0 0 160 100">
+            <line x1="20" y1="88" x2="150" y2="88" stroke="#ddd" stroke-width="1"/>
+            <line x1="20" y1="88" x2="20" y2="10" stroke="#ddd" stroke-width="1"/>
+            <!-- 折れ線: ゆるやかな山 -->
+            <polyline points="30,72 80,52 130,72" fill="none" stroke="#1AAB8A" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle cx="30" cy="72" r="4" fill="white" stroke="#1AAB8A" stroke-width="2"/>
+            <circle cx="80" cy="52" r="4" fill="white" stroke="#1AAB8A" stroke-width="2"/>
+            <circle cx="130" cy="72" r="4" fill="white" stroke="#1AAB8A" stroke-width="2"/>
+            <!-- ラベル：折れ線の頂点から十分上（y=16）に白背景付きで -->
+            <rect x="40" y="5" width="80" height="17" rx="4" fill="#E0F7F2"/>
+            <text x="80" y="17" text-anchor="middle" font-size="11" font-weight="700" fill="#1AAB8A">ゆるやか・小さい</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="tip" style="background:var(--teal-light); margin-top:10px;">
+        <span class="tip-icon">💡</span>
+        <span><strong>大切なポイント：</strong>かたむきが急なほど「変わり方が大きい」、ゆるやかなほど「変わり方が小さい」！</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ かき方 -->
+  <div class="section">
+    <div class="sec-label">
+      <div class="num-bubble" style="background:var(--amber);color:white;">③</div>
+      <div class="sec-title">折れ線グラフのかき方</div>
+    </div>
+    <div class="card">
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><div>グラフ用紙に<strong>表題（タイトル）</strong>をかく</div></div>
+        <div class="step"><div class="step-n">2</div><div><strong>横の軸</strong>（何を表すか）と<strong>縦の軸</strong>（単位）に何をかくか決める</div></div>
+        <div class="step"><div class="step-n">3</div><div>縦の軸の<strong>1目盛りの大きさ</strong>を決める（データの最大・最小に合わせる）</div></div>
+        <div class="step"><div class="step-n">4</div><div>それぞれの時刻・値に<strong>点を打つ</strong></div></div>
+        <div class="step"><div class="step-n">5</div><div>点を順に<strong>直線でつなぐ</strong></div></div>
+      </div>
+
+      <!-- 波線の説明 -->
+      <div style="margin-top:14px; font-size:14px; font-weight:700; margin-bottom:8px;">〜〜 波線（なみせん）の使い方</div>
+      <div class="grid2">
+        <div class="graph-demo">
+          <div class="graph-title">波線なし：変化がわかりにくい</div>
+          <svg width="100%" viewBox="0 0 160 100">
+            <line x1="35" y1="10" x2="35" y2="90" stroke="#ccc" stroke-width="1"/>
+            <line x1="35" y1="90" x2="155" y2="90" stroke="#ccc" stroke-width="1"/>
+            <!-- y labels -->
+            <text x="30" y="93" text-anchor="end" font-size="9" fill="#aaa">0</text>
+            <text x="30" y="33" text-anchor="end" font-size="9" fill="#aaa">20</text>
+            <!-- line (values around 35-38 → tiny range) -->
+            <polyline points="45,32 75,27 105,30 135,25" fill="none" stroke="#888" stroke-width="1.5"/>
+            <circle cx="45" cy="32" r="2.5" fill="white" stroke="#888" stroke-width="1.5"/>
+            <circle cx="75" cy="27" r="2.5" fill="white" stroke="#888" stroke-width="1.5"/>
+            <circle cx="105" cy="30" r="2.5" fill="white" stroke="#888" stroke-width="1.5"/>
+            <circle cx="135" cy="25" r="2.5" fill="white" stroke="#888" stroke-width="1.5"/>
+            <text x="90" y="55" text-anchor="middle" font-size="10" fill="#ccc">変化が小さく見える…</text>
+          </svg>
+        </div>
+        <div class="graph-demo">
+          <div class="graph-title">波線あり：変化がよくわかる！</div>
+          <svg width="100%" viewBox="0 0 160 100">
+            <line x1="35" y1="90" x2="155" y2="90" stroke="#ccc" stroke-width="1"/>
+            <!-- y axis with break -->
+            <line x1="35" y1="75" x2="35" y2="15" stroke="#ccc" stroke-width="1"/>
+            <!-- wave break symbol -->
+            <path d="M28 75 Q31 72 34 75 Q37 78 40 75" fill="none" stroke="#2D7DD2" stroke-width="1.5"/>
+            <line x1="35" y1="75" x2="35" y2="80" stroke="#ccc" stroke-width="1"/>
+            <!-- y labels -->
+            <text x="30" y="93" text-anchor="end" font-size="9" fill="#aaa">0</text>
+            <text x="30" y="78" text-anchor="end" font-size="9" fill="#2D7DD2">35</text>
+            <text x="30" y="17" text-anchor="end" font-size="9" fill="#aaa">39</text>
+            <!-- line (expanded range 35-38) -->
+            <polyline points="45,60 75,44 105,52 135,36" fill="none" stroke="#2D7DD2" stroke-width="2"/>
+            <circle cx="45" cy="60" r="3" fill="white" stroke="#2D7DD2" stroke-width="1.8"/>
+            <circle cx="75" cy="44" r="3" fill="white" stroke="#2D7DD2" stroke-width="1.8"/>
+            <circle cx="105" cy="52" r="3" fill="white" stroke="#2D7DD2" stroke-width="1.8"/>
+            <circle cx="135" cy="36" r="3" fill="white" stroke="#2D7DD2" stroke-width="1.8"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="tip" style="background:var(--amber-light);">
+        <span class="tip-icon">⚠️</span>
+        <span>波線を使うとかたむきが急に見えるので、<strong>目盛りをよく見て</strong>どのくらい変わったか確かめよう！</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ 2つのグラフ -->
+  <div class="section">
+    <div class="sec-label">
+      <div class="num-bubble" style="background:var(--purple);color:white;">④</div>
+      <div class="sec-title">2つのグラフをくらべる</div>
+    </div>
+    <div class="card">
+      <div style="font-size:14px; margin-bottom:10px;">2つの折れ線グラフを<strong>1つのグラフにまとめる</strong>と、一度に2つのことがらを比べられる！</div>
+
+      <!-- two-line graph demo -->
+      <div style="text-align:center; margin-bottom:8px;">
+        <svg width="100%" viewBox="0 0 420 160" xmlns="http://www.w3.org/2000/svg">
+          <line x1="55" y1="20" x2="55" y2="130" stroke="#ccc" stroke-width="1"/>
+          <line x1="55" y1="130" x2="410" y2="130" stroke="#ccc" stroke-width="1"/>
+          <line x1="55" y1="100" x2="410" y2="100" stroke="#eee" stroke-width="0.8" stroke-dasharray="4 3"/>
+          <line x1="55" y1="70" x2="410" y2="70" stroke="#eee" stroke-width="0.8" stroke-dasharray="4 3"/>
+          <line x1="55" y1="40" x2="410" y2="40" stroke="#eee" stroke-width="0.8" stroke-dasharray="4 3"/>
+          <text x="48" y="133" text-anchor="end" font-size="10" fill="#aaa">0</text>
+          <text x="48" y="103" text-anchor="end" font-size="10" fill="#aaa">10</text>
+          <text x="48" y="73" text-anchor="end" font-size="10" fill="#aaa">20</text>
+          <text x="48" y="43" text-anchor="end" font-size="10" fill="#aaa">30</text>
+          <!-- x labels -->
+          <text x="80" y="145" text-anchor="middle" font-size="10" fill="#aaa">1月</text>
+          <text x="130" y="145" text-anchor="middle" font-size="10" fill="#aaa">3月</text>
+          <text x="180" y="145" text-anchor="middle" font-size="10" fill="#aaa">5月</text>
+          <text x="230" y="145" text-anchor="middle" font-size="10" fill="#aaa">7月</text>
+          <text x="280" y="145" text-anchor="middle" font-size="10" fill="#aaa">9月</text>
+          <text x="330" y="145" text-anchor="middle" font-size="10" fill="#aaa">11月</text>
+          <text x="380" y="145" text-anchor="middle" font-size="10" fill="#aaa">12月</text>
+          <!-- Tokyo: 5,8,17,24,22,13,5 → y=130-val*3 = 115,106,79,58,64,91,115 -->
+          <polyline points="80,115 130,106 180,79 230,58 280,64 330,91 380,115" fill="none" stroke="#2D7DD2" stroke-width="2.5" stroke-linejoin="round"/>
+          <!-- Sydney (reversed seasons): 22,20,12,7,11,18,22 → y=130-val*3=64,70,94,109,97,76,64 -->
+          <polyline points="80,64 130,70 180,94 230,109 280,97 330,76 380,64" fill="none" stroke="#E8553D" stroke-width="2.5" stroke-linejoin="round" stroke-dasharray="6 3"/>
+          <!-- dots Tokyo -->
+          <circle cx="80"  cy="115" r="3.5" fill="white" stroke="#2D7DD2" stroke-width="2"/>
+          <circle cx="230" cy="58"  r="3.5" fill="white" stroke="#2D7DD2" stroke-width="2"/>
+          <circle cx="380" cy="115" r="3.5" fill="white" stroke="#2D7DD2" stroke-width="2"/>
+          <!-- dots Sydney -->
+          <circle cx="80"  cy="64"  r="3.5" fill="white" stroke="#E8553D" stroke-width="2"/>
+          <circle cx="230" cy="109" r="3.5" fill="white" stroke="#E8553D" stroke-width="2"/>
+          <circle cx="380" cy="64"  r="3.5" fill="white" stroke="#E8553D" stroke-width="2"/>
+          <!-- legend -->
+          <line x1="200" y1="17" x2="225" y2="17" stroke="#2D7DD2" stroke-width="2.5"/>
+          <text x="228" y="21" font-size="11" fill="#2D7DD2">東京</text>
+          <line x1="265" y1="17" x2="290" y2="17" stroke="#E8553D" stroke-width="2.5" stroke-dasharray="6 3"/>
+          <text x="293" y="21" font-size="11" fill="#E8553D">シドニー</text>
+        </svg>
+      </div>
+
+      <ul class="chklist">
+        <li><span class="chk">✓</span>目盛りの大きさをそろえて1つにまとめると、2つを同時に比べやすい</li>
+        <li><span class="chk">✓</span>東京とシドニーは季節が反対なので、グラフの形が逆になっている</li>
+        <li><span class="chk">✓</span>折れ線グラフと棒グラフが重なった「複合グラフ」もある（例：気温と降水量）</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ⑤ 棒グラフとの使い分け -->
+  <div class="section">
+    <div class="sec-label">
+      <div class="num-bubble" style="background:var(--coral);color:white;">⑤</div>
+      <div class="sec-title">棒グラフ と 折れ線グラフの使い分け</div>
+    </div>
+    <div class="card">
+      <table>
+        <tr>
+          <th></th>
+          <th style="color:var(--blue);">📊 棒グラフ</th>
+          <th style="color:var(--teal);">📈 折れ線グラフ</th>
+        </tr>
+        <tr>
+          <td>得意なこと</td>
+          <td>量の大きさをくらべる</td>
+          <td>時間による変化をよむ</td>
+        </tr>
+        <tr>
+          <td>よむポイント</td>
+          <td>棒の長さをよむ</td>
+          <td>点の位置・線のかたむきをよむ</td>
+        </tr>
+        <tr>
+          <td>よく使う例</td>
+          <td>月別の売り上げ、各国の人口</td>
+          <td>1日の気温、身長の変化</td>
+        </tr>
+      </table>
+      <div class="tip" style="background:var(--teal-light); margin-top:10px;">
+        <span class="tip-icon">🌟</span>
+        <span>同じデータでも、何を伝えたいかで使うグラフが変わるよ！<br>変化を見せたいなら折れ線グラフを選ぼう。</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- まとめ -->
+  <div class="summary-card">
+    <div class="summary-title">📝 この単元のまとめ</div>
+    <div class="sum-item"><div class="sum-dot"></div><div>折れ線グラフは<strong>変化の様子</strong>をよむグラフ（棒グラフは大小比較）</div></div>
+    <div class="sum-item"><div class="sum-dot"></div><div>線が上がる・水平・下がるで、ふえる・変わらない・へるがわかる</div></div>
+    <div class="sum-item"><div class="sum-dot"></div><div><strong>かたむきが急</strong> = 変わり方が大きい。<strong>ゆるやか</strong> = 変わり方が小さい</div></div>
+    <div class="sum-item"><div class="sum-dot"></div><div>波線（〜〜）で目盛りを省略すると変化が見やすくなるが、<strong>目盛りに注意</strong>！</div></div>
+    <div class="sum-item"><div class="sum-dot"></div><div>2つのグラフを1つにまとめると、2つのことがらを一度に比べられる</div></div>
+  </div>
+
+</div>
+</body>
+</html>
