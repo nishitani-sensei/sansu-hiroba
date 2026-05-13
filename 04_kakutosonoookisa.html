@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>角とその大きさ まとめ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap');
+  :root {
+    --green:  #1A9E5A; --green-l:  #E3F7ED;
+    --blue:   #2563C4; --blue-l:   #EAF0FF;
+    --orange: #E8720C; --orange-l: #FFF0E0;
+    --red:    #D63B3B; --red-l:    #FDEAEA;
+    --purple: #7048A8; --purple-l: #F0EBFA;
+    --teal:   #0E9E7A; --teal-l:   #DFF5EE;
+    --gray: #f6f5f0; --text: #1c1b18; --muted: #666;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: #fafaf7; color: var(--text); line-height: 1.75; padding-bottom: 3rem; }
+  .hero { background: linear-gradient(135deg,#0a4f2a 0%,#1A9E5A 55%,#4ecb8d 100%); color: white; padding: 2.5rem 1.5rem 2rem; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content:''; position:absolute; inset:0; background:url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='25' cy='25' r='1.5' fill='white' fill-opacity='.07'/%3E%3C/svg%3E") repeat; pointer-events:none; }
+  .hero-unit  { font-size:12px; letter-spacing:3px; opacity:.75; margin-bottom:6px; }
+  .hero-title { font-size:clamp(26px,6vw,42px); font-weight:900; letter-spacing:-1px; margin-bottom:8px; }
+  .hero-sub   { font-size:14px; opacity:.85; margin-bottom:10px; }
+  .hero-pill  { display:inline-block; background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.35); border-radius:99px; font-size:12px; padding:4px 14px; }
+  .container  { max-width:700px; margin:0 auto; padding:0 1rem; }
+  .section    { margin-top:2rem; }
+  .sec-label  { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .num-bubble { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; flex-shrink:0; }
+  .sec-title  { font-size:18px; font-weight:700; }
+  .card       { background:white; border-radius:14px; padding:1.2rem 1.4rem; border:1.5px solid #e8e6de; box-shadow:0 2px 8px rgba(0,0,0,.04); }
+  .big-point  { font-size:15px; font-weight:700; line-height:1.6; background:var(--green-l); border-left:4px solid var(--green); border-radius:0 10px 10px 0; padding:10px 16px; margin-bottom:14px; }
+  .grid2      { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media(max-width:480px){ .grid2{grid-template-columns:1fr;} }
+  .mini       { border-radius:10px; padding:12px 14px; }
+  .mini-title { font-size:12px; font-weight:700; margin-bottom:6px; }
+  .mini-body  { font-size:13px; line-height:1.65; }
+  .tip        { border-radius:10px; padding:10px 14px; font-size:13px; line-height:1.65; margin-top:10px; display:flex; gap:8px; align-items:flex-start; }
+  .tip-icon   { font-size:15px; flex-shrink:0; margin-top:1px; }
+  .step-row   { display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin:10px 0 4px; }
+  .step-box   { color:white; border-radius:10px; padding:7px 13px; font-size:14px; font-weight:700; white-space:nowrap; }
+  .step-arr   { font-size:20px; color:var(--green); font-weight:700; }
+  .angle-row  { display:flex; gap:18px; flex-wrap:wrap; align-items:flex-start; margin:10px 0; }
+  .angle-item { display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .angle-label{ font-size:12px; font-weight:700; text-align:center; }
+  .formula-box{ background:var(--blue-l); border:2px solid var(--blue); border-radius:12px; padding:12px 16px; text-align:center; font-size:15px; font-weight:700; color:var(--blue); margin:10px 0; }
+  .formula-box span{ font-size:12px; font-weight:400; color:var(--muted); display:block; margin-top:4px; }
+  .summary-card { background:linear-gradient(135deg,#0a4f2a,#1A9E5A); color:white; border-radius:16px; padding:1.5rem 1.6rem; margin-top:2rem; }
+  .summary-title{ font-size:17px; font-weight:700; margin-bottom:12px; }
+  .sum-item   { display:flex; gap:10px; align-items:flex-start; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.18); font-size:14px; }
+  .sum-item:last-child{ border-bottom:none; }
+  .sum-dot    { width:8px; height:8px; border-radius:50%; background:#9EFFD0; flex-shrink:0; margin-top:6px; }
+  /* SVG共通：ラベル背景用 */
+  .lbg { fill:white; opacity:0.9; }
+
+  /* ===== SITES BAR ===== */
+  .sites-bar { background:#0a0a1a; border-bottom:1px solid #2E2E55; padding:0 16px; height:44px; display:flex; align-items:center; gap:10px; position:sticky; top:0; z-index:200; }
+  .sites-logo { font-size:0.78rem; color:#6666aa; display:flex; align-items:center; gap:6px; }
+  .sites-logo-icon { width:18px; height:18px; background:#1a73e8; border-radius:3px; display:flex; align-items:center; justify-content:center; color:white; font-weight:900; font-size:11px; }
+  .sites-title { font-size:0.88rem; font-weight:500; color:#aaaacc; flex:1; }
+  .sites-badge { font-size:0.68rem; background:rgba(26,115,232,0.15); color:#5588cc; padding:2px 10px; border-radius:50px; font-weight:600; border:1px solid rgba(26,115,232,0.3); }
+  .back-bar { background:#0D0D1A; padding:10px 16px; border-bottom:2px solid #2E2E55; display:flex; align-items:center; }
+  .back-btn { display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg,#FFD700,#FFA500); border:none; border-radius:50px; padding:8px 20px; color:#0D0D1A; font-size:0.88rem; font-weight:900; cursor:pointer; text-decoration:none; font-family:inherit; transition:opacity 0.15s; box-shadow:0 2px 12px rgba(255,215,0,0.3); }
+  .back-btn:hover { opacity:0.85; }
+</style>
+</head>
+<body>
+<div class="sites-bar">
+  <div class="sites-logo">
+    <div class="sites-logo-icon">S</div>
+    <span>Google サイト</span>
+  </div>
+  <div class="sites-title">算数ひろば｜文関小学校</div>
+  <span class="sites-badge">🔒 リンクを知る人のみ</span>
+</div>
+<div class="back-bar">
+  <a class="back-btn" href="index.html">🏠 拠点にもどる</a>
+</div>
+
+
+
+<div class="hero">
+  <div class="hero-unit">わくわく算数 4年上 ▶ 第4単元</div>
+  <div class="hero-title">角とその大きさ 📐</div>
+  <div class="hero-sub">角の大きさをはかったり・かいたりできるようになろう！</div>
+  <div class="hero-pill">全8時間</div>
+</div>
+
+<div class="container">
+
+<!-- ① 角とは何か -->
+<div class="section">
+  <div class="sec-label">
+    <div class="num-bubble" style="background:var(--green);color:white;">①</div>
+    <div class="sec-title">「角」とは何だろう？</div>
+  </div>
+  <div class="card">
+    <div class="big-point">角とは、1つの<strong>頂点（ちょうてん）</strong>から出ている<strong>2つの辺</strong>がつくる形のこと。<br>辺を開いていくほど、角が大きくなる！</div>
+
+    <div class="angle-row">
+
+      <!-- ▼ 小さな角
+           頂点 V=(22,88)
+           辺1: V→(112,26) 上右方向
+           辺2: V→(112,78) ほぼ右方向
+           弧: 半径38、辺1上(53,67)～辺2上(62,85) sweep=1(CW)
+           ラベル位置：辺ラベルは各辺の端点近く（白背景）
+                       角ラベルは辺の間（白背景）
+      -->
+      <div class="angle-item">
+        <svg width="130" height="108" viewBox="0 0 130 108" style="display:block;">
+          <!-- 辺1 -->
+          <line x1="22" y1="88" x2="112" y2="26" stroke="#1A9E5A" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 辺2 -->
+          <line x1="22" y1="88" x2="112" y2="78" stroke="#1A9E5A" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 弧 (半径38、辺1端(53,67)→辺2端(62,85)、CW) -->
+          <path d="M 53 67 A 38 38 0 0 1 62 85" fill="none" stroke="#E8720C" stroke-width="2.2"/>
+          <!-- 頂点 -->
+          <circle cx="22" cy="88" r="4" fill="#1A9E5A"/>
+          <!-- ラベル：辺1（端点付近・上方向に出す） -->
+          <rect x="90" y="10" width="28" height="18" rx="3" class="lbg"/>
+          <text x="104" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="#1A9E5A" font-family="Noto Sans JP,sans-serif">辺</text>
+          <!-- ラベル：辺2（端点付近・下方向に出す） -->
+          <rect x="90" y="82" width="28" height="18" rx="3" class="lbg"/>
+          <text x="104" y="96" text-anchor="middle" font-size="12" font-weight="700" fill="#1A9E5A" font-family="Noto Sans JP,sans-serif">辺</text>
+          <!-- ラベル：角（弧の内側・白背景） -->
+          <rect x="52" y="68" width="22" height="16" rx="3" class="lbg"/>
+          <text x="63" y="80" text-anchor="middle" font-size="12" font-weight="700" fill="#E8720C" font-family="Noto Sans JP,sans-serif">角</text>
+          <!-- 頂点ラベル -->
+          <rect x="2" y="92" width="28" height="14" rx="3" class="lbg"/>
+          <text x="16" y="103" text-anchor="middle" font-size="11" fill="#555" font-family="Noto Sans JP,sans-serif">頂点</text>
+        </svg>
+        <div class="angle-label" style="color:var(--green);">小さい角</div>
+      </div>
+
+      <!-- ▼ 直角 90°
+           頂点 V=(16,84)
+           辺1: V→(90,84) 右
+           辺2: V→(16,10) 上
+           直角マーク: (16,68)→(33,68)→(33,84)
+           「90°」は直角マークの内側・右上に配置
+      -->
+      <div class="angle-item">
+        <svg width="100" height="100" viewBox="0 0 100 100" style="display:block;">
+          <line x1="16" y1="84" x2="90" y2="84" stroke="#2563C4" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="16" y1="84" x2="16" y2="10" stroke="#2563C4" stroke-width="2.5" stroke-linecap="round"/>
+          <polyline points="16,67 33,67 33,84" fill="none" stroke="#2563C4" stroke-width="2"/>
+          <circle cx="16" cy="84" r="4" fill="#2563C4"/>
+          <!-- 90°ラベル：直角マークの内側（x=36, y=62付近）白背景 -->
+          <rect x="34" y="53" width="36" height="18" rx="3" class="lbg"/>
+          <text x="52" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#2563C4" font-family="Noto Sans JP,sans-serif">90°</text>
+        </svg>
+        <div class="angle-label" style="color:var(--blue);">直角 = 90°</div>
+      </div>
+
+      <!-- ▼ 大きい角
+           頂点 V=(18,80)
+           辺1: V→(112,22) 上右
+           辺2: V→(112,94) やや下右
+           弧: 半径44、辺1上(55,57)→辺2上(62,87)、CW
+           「大きい角」は両辺の間・弧の右側に白背景付き配置
+           辺ラベルは各辺の端点付近
+      -->
+      <div class="angle-item">
+        <svg width="130" height="108" viewBox="0 0 130 108" style="display:block;">
+          <!-- 辺1 (上右) -->
+          <line x1="18" y1="80" x2="112" y2="22" stroke="#D63B3B" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 辺2 (やや下右) -->
+          <line x1="18" y1="80" x2="112" y2="94" stroke="#D63B3B" stroke-width="2.5" stroke-linecap="round"/>
+          <!--
+            弧の端点計算 (半径44、V=(18,80)):
+            辺1方向: (94,-58) len=110.7 unit=(0.849,-0.524) → (18+37.4,80-23.1) = (55.4,56.9) ≈ (55,57)
+            辺2方向: (94,14) len=95.0  unit=(0.989,0.147) → (18+43.5,80+6.5) = (61.5,86.5) ≈ (62,87)
+            CW sweep=1 で辺1→辺2
+          -->
+          <path d="M 55 57 A 44 44 0 0 1 62 87" fill="none" stroke="#E8720C" stroke-width="2.2"/>
+          <!-- 頂点 -->
+          <circle cx="18" cy="80" r="4" fill="#D63B3B"/>
+          <!-- 辺ラベル：辺1（端点22付近、上に出す） -->
+          <rect x="90" y="8" width="28" height="18" rx="3" class="lbg"/>
+          <text x="104" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#D63B3B" font-family="Noto Sans JP,sans-serif">辺</text>
+          <!-- 辺ラベル：辺2（端点94付近、下に出す） -->
+          <rect x="90" y="96" width="28" height="11" rx="3" class="lbg"/>
+          <text x="104" y="105" text-anchor="middle" font-size="12" font-weight="700" fill="#D63B3B" font-family="Noto Sans JP,sans-serif">辺</text>
+          <!--
+            「大きい角」ラベル：弧の中央付近（両辺の間、辺にかからない位置）
+            弧中央角 = 辺1角(-31.6°)+辺2角(8.5°))/2 = -11.6°、r=56
+            x=18+56*cos(-11.6°)=18+54.9=72.9 y=80+56*sin(-11.6°)=80-11.3=68.7
+            → 白背景 rect x=57 y=58 w=50 h=18, text at (82,71)
+          -->
+          <rect x="57" y="57" width="52" height="19" rx="4" class="lbg"/>
+          <text x="83" y="70" text-anchor="middle" font-size="12" font-weight="700" fill="#E8720C" font-family="Noto Sans JP,sans-serif">大きい角</text>
+        </svg>
+        <div class="angle-label" style="color:var(--red);">大きい角</div>
+      </div>
+
+      <!-- ▼ 180°（半回転）
+           頂点 V=(65,58) 中央に配置
+           辺1: V→(118,58) 右
+           辺2: V→(12,58) 左  ← 2辺で直線になる
+           弧: 上側半円 (半径38) CW で辺1上→辺2上
+           「180°」は弧の上（中央上部）
+           「まっすぐ！」は直線の下
+      -->
+      <div class="angle-item">
+        <svg width="132" height="88" viewBox="0 0 132 88" style="display:block;">
+          <!-- 辺1（右へ）と辺2（左へ）を1本の直線で表現 -->
+          <line x1="12" y1="58" x2="118" y2="58" stroke="#7048A8" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 頂点 -->
+          <circle cx="65" cy="58" r="4" fill="#7048A8"/>
+          <!--
+            半円弧: 半径38、辺1上(103,58) → 辺2上(27,58) 上側をCW(sweep=1)で通る
+            CW: 右(103,58) → 上 → 左(27,58)
+          -->
+          <path d="M 103 58 A 38 38 0 0 1 27 58" fill="none" stroke="#E8720C" stroke-width="2.2"/>
+          <!-- 「180°」: 弧の頂上（y=20）付近、白背景 -->
+          <rect x="40" y="10" width="50" height="20" rx="4" class="lbg"/>
+          <text x="65" y="25" text-anchor="middle" font-size="14" font-weight="700" fill="#7048A8" font-family="Noto Sans JP,sans-serif">180°</text>
+          <!-- 「まっすぐ！」: 直線の下、白背景 -->
+          <rect x="26" y="64" width="72" height="17" rx="3" class="lbg"/>
+          <text x="62" y="76" text-anchor="middle" font-size="12" fill="#7048A8" font-family="Noto Sans JP,sans-serif">まっすぐ！</text>
+        </svg>
+        <div class="angle-label" style="color:var(--purple);">半回転 = 180°</div>
+      </div>
+
+      <!-- ▼ 360°（1回転）
+           円: 中心(48,50) 半径30
+           辺: 中心→(78,50) 右方向
+           「360°」は円の上方（円外）
+           「1回転」は円の下方（円外）
+      -->
+      <div class="angle-item">
+        <svg width="100" height="100" viewBox="0 0 100 100" style="display:block;">
+          <!-- 円（破線で1回転を表現） -->
+          <circle cx="48" cy="50" r="30" fill="none" stroke="#E8720C" stroke-width="2" stroke-dasharray="5 3"/>
+          <!-- 基準辺 -->
+          <line x1="48" y1="50" x2="78" y2="50" stroke="#1A9E5A" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 頂点 -->
+          <circle cx="48" cy="50" r="4" fill="#1A9E5A"/>
+          <!-- 「360°」: 円の上方（y=10付近）に白背景付き配置 -->
+          <rect x="20" y="5" width="56" height="20" rx="4" class="lbg"/>
+          <text x="48" y="20" text-anchor="middle" font-size="14" font-weight="700" fill="#E8720C" font-family="Noto Sans JP,sans-serif">360°</text>
+          <!-- 「1回転」: 円の下方（y=86付近）に白背景付き配置 -->
+          <rect x="18" y="84" width="60" height="16" rx="3" class="lbg"/>
+          <text x="48" y="96" text-anchor="middle" font-size="12" fill="#555" font-family="Noto Sans JP,sans-serif">1回転</text>
+        </svg>
+        <div class="angle-label" style="color:var(--orange);">1回転 = 360°</div>
+      </div>
+
+    </div><!-- /angle-row -->
+
+    <div class="tip" style="background:var(--green-l);">
+      <span class="tip-icon">💡</span>
+      <span>角の大きさは<strong>辺の長さには関係なし</strong>！辺がどれだけ開いているかで決まる。</span>
+    </div>
+  </div>
+</div>
+
+<!-- ② 角の大きさの単位 -->
+<div class="section">
+  <div class="sec-label">
+    <div class="num-bubble" style="background:var(--blue);color:white;">②</div>
+    <div class="sec-title">角の大きさの単位「度（°）」</div>
+  </div>
+  <div class="card">
+    <div class="big-point" style="background:var(--blue-l);border-color:var(--blue);">
+      角の大きさは <strong>度（°）</strong> であらわす。<br>
+      直角 ＝ <strong style="color:var(--blue);">90°</strong>　　半回転 ＝ <strong style="color:var(--purple);">180°</strong>　　1回転 ＝ <strong style="color:var(--orange);">360°</strong>
+    </div>
+
+    <div style="font-size:14px;font-weight:700;margin-bottom:8px;">🔵 分度器（ぶんどき）の見方</div>
+    <!--
+      分度器SVG: 幅280×高さ175
+      半円中心: (140,140), 半径110
+      60°の線: (140,140)→(195,46)
+        方向: cos(60°)=0.5, sin(60°)=0.866
+        端点: (140+110*0.5, 140-110*0.866) = (195, 45.5) ≈ (195,46) ✓
+      弧: 半径45で (185,140)→(162,101)
+        (185,140): 右から45px = (140+45,140) ✓
+        (162,101): cos(60°)=0.5→140+45*0.5=162.5, sin(60°)=0.866→140-45*0.866=101.1 ✓
+      60°ラベル: 弧の中央(30°位置)の少し外側
+        30°位置: (140+50*cos30°, 140-50*sin30°) = (140+43.3,140-25) = (183.3, 115)
+        → 白背景 rect (168,106) w=42 h=18, text (189,119) 中央
+    -->
+    <svg width="100%" viewBox="0 0 280 175" style="display:block;">
+      <!-- 分度器半円 -->
+      <path d="M 30 140 A 110 110 0 0 1 250 140" fill="#f0f8ff" stroke="#2563C4" stroke-width="2"/>
+      <!-- 底辺 -->
+      <line x1="30" y1="140" x2="250" y2="140" stroke="#2563C4" stroke-width="2"/>
+      <!-- 中心点 -->
+      <circle cx="140" cy="140" r="5" fill="#E8720C"/>
+      <!-- 目盛りと数字 -->
+      <line x1="250" y1="140" x2="258" y2="140" stroke="#333" stroke-width="1.5"/>
+      <text x="262" y="145" font-size="11" fill="#333" font-family="sans-serif">0</text>
+      <line x1="235" y1="85" x2="240" y2="77" stroke="#333" stroke-width="1.5"/>
+      <text x="244" y="79" font-size="10" fill="#555" font-family="sans-serif">30</text>
+      <line x1="195" y1="45" x2="198" y2="36" stroke="#333" stroke-width="1.5"/>
+      <text x="202" y="34" font-size="10" fill="#555" font-family="sans-serif">60</text>
+      <line x1="140" y1="30" x2="140" y2="20" stroke="#2563C4" stroke-width="2"/>
+      <text x="128" y="17" font-size="11" font-weight="700" fill="#2563C4" font-family="sans-serif">90</text>
+      <line x1="85" y1="45" x2="82" y2="36" stroke="#333" stroke-width="1.5"/>
+      <text x="62" y="34" font-size="10" fill="#555" font-family="sans-serif">120</text>
+      <line x1="45" y1="85" x2="40" y2="77" stroke="#333" stroke-width="1.5"/>
+      <text x="16" y="79" font-size="10" fill="#555" font-family="sans-serif">150</text>
+      <line x1="30" y1="140" x2="22" y2="140" stroke="#333" stroke-width="1.5"/>
+      <text x="2" y="145" font-size="11" fill="#333" font-family="sans-serif">180</text>
+      <!-- 基準線（0°）点線 -->
+      <line x1="140" y1="140" x2="250" y2="140" stroke="#E8720C" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <!-- 60°の測定線（緑）-->
+      <line x1="140" y1="140" x2="195" y2="46" stroke="#1A9E5A" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- 弧（0°→60°） -->
+      <path d="M 185 140 A 45 45 0 0 1 162 101" fill="none" stroke="#1A9E5A" stroke-width="2"/>
+      <!--
+        60°ラベル: 弧の中央(30°位置)の外側に白背景付き
+        30°位置, r=54: (140+54*cos30°, 140-54*sin30°) = (140+46.8, 140-27) = (186.8, 113)
+        白背景 rect(168,104) w=46 h=20, text "60°" at (191,119)
+      -->
+      <rect x="168" y="104" width="46" height="20" rx="4" class="lbg"/>
+      <text x="191" y="119" text-anchor="middle" font-size="14" font-weight="700" fill="#1A9E5A" font-family="sans-serif">60°</text>
+      <!-- 注釈 -->
+      <text x="115" y="158" font-size="11" fill="#E8720C" font-family="sans-serif">中心 → 頂点に合わせる</text>
+      <text x="115" y="172" font-size="11" fill="#E8720C" font-family="sans-serif">0°の線 → 辺に合わせる</text>
+    </svg>
+
+    <div class="grid2" style="margin-top:10px;">
+      <div class="mini" style="background:var(--blue-l);">
+        <div class="mini-title" style="color:var(--blue);">分度器の使い方</div>
+        <div class="mini-body">
+          ① 分度器の<strong>中心</strong>を角の<strong>頂点</strong>に合わせる<br>
+          ② <strong>0°の線</strong>を一方の辺に合わせる<br>
+          ③ もう一方の辺が指す<strong>目盛りを読む</strong>
+        </div>
+      </div>
+      <div class="mini" style="background:var(--orange-l);">
+        <div class="mini-title" style="color:var(--orange);">⚠️ 気をつけること</div>
+        <div class="mini-body">
+          目盛りは<strong>内側と外側</strong>の2列ある。<br>
+          0°から読み始めた方の目盛りを使う。<br>（直角より大小の見当をつける）
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ③ 辺が短いとき・向きが反対のとき -->
+<div class="section">
+  <div class="sec-label">
+    <div class="num-bubble" style="background:var(--teal);color:white;">③</div>
+    <div class="sec-title">辺が短い・向きが反対のときのはかり方</div>
+  </div>
+  <div class="card">
+    <div class="grid2">
+
+      <!-- ▼ 辺が短いとき
+           頂点 V=(22,88)
+           実際の短い辺: V→(52,60) と V→(62,86)
+           延長した辺（点線）: (52,60)→(105,22) と (62,86)→(138,83)
+           「短い辺」ラベル: 短い辺の端点付近
+           「定規で伸ばす！」: 延長部の中ほど・白背景
+           「伸ばした辺」: 延長線の端点付近
+      -->
+      <div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--teal);">辺が短いとき</div>
+        <svg width="100%" viewBox="0 0 155 108" style="display:block;margin-bottom:6px;">
+          <!-- 実際の短い辺（実線） -->
+          <line x1="22" y1="88" x2="52" y2="60" stroke="#aaa" stroke-width="2" stroke-linecap="round"/>
+          <line x1="22" y1="88" x2="62" y2="86" stroke="#aaa" stroke-width="2" stroke-linecap="round"/>
+          <!-- 延長した辺（点線） -->
+          <line x1="52" y1="60" x2="105" y2="22" stroke="#0E9E7A" stroke-width="2" stroke-dasharray="5 3" stroke-linecap="round"/>
+          <line x1="62" y1="86" x2="138" y2="83" stroke="#0E9E7A" stroke-width="2" stroke-dasharray="5 3" stroke-linecap="round"/>
+          <!-- 頂点 -->
+          <circle cx="22" cy="88" r="4" fill="#0E9E7A"/>
+          <!-- 「短い辺」: 短い辺の中ほど（辺から離した位置） -->
+          <rect x="2" y="64" width="40" height="16" rx="3" class="lbg"/>
+          <text x="22" y="76" text-anchor="middle" font-size="11" fill="#888" font-family="sans-serif">短い辺</text>
+          <!-- 「定規で伸ばす！」: 延長辺の中ほどの上方・白背景 -->
+          <rect x="46" y="9" width="72" height="16" rx="3" class="lbg"/>
+          <text x="82" y="21" text-anchor="middle" font-size="11" font-weight="700" fill="#0E9E7A" font-family="sans-serif">定規で伸ばす！</text>
+          <!-- 矢印（テキストから延長線へ） -->
+          <line x1="82" y1="25" x2="82" y2="42" stroke="#0E9E7A" stroke-width="1.2" stroke-dasharray="3 2"/>
+          <!-- 「伸ばした辺」: 延長辺の端点付近・外側 -->
+          <rect x="98" y="10" width="52" height="16" rx="3" class="lbg"/>
+          <text x="124" y="22" text-anchor="middle" font-size="11" fill="#0E9E7A" font-family="sans-serif">伸ばした辺</text>
+        </svg>
+        <div class="tip" style="background:var(--teal-l);margin-top:0;padding:8px 12px;">
+          <span class="tip-icon">💡</span>
+          <span style="font-size:12px;">定規で辺を<strong>まっすぐ伸ばして</strong>からはかる</span>
+        </div>
+      </div>
+
+      <!-- ▼ 向きが反対のとき
+           辺が左方向に伸びている角。
+           頂点 V=(128,72)
+           辺1: V→(18,28)（左上）
+           辺2: V→(18,78)（左ほぼ水平）
+           「向きが反対でも外側の目盛りで読める」説明
+      -->
+      <div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--purple);">向きが反対のとき</div>
+        <svg width="100%" viewBox="0 0 155 108" style="display:block;margin-bottom:6px;">
+          <!-- 辺1（左上方向） -->
+          <line x1="128" y1="72" x2="20" y2="28" stroke="#7048A8" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 辺2（左ほぼ水平） -->
+          <line x1="128" y1="72" x2="20" y2="76" stroke="#7048A8" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 頂点 -->
+          <circle cx="128" cy="72" r="4" fill="#7048A8"/>
+          <!-- 弧（角の内側） -->
+          <path d="M 84 48 A 48 48 0 0 0 80 72" fill="none" stroke="#E8720C" stroke-width="2"/>
+          <!-- 「辺」ラベル（辺1端点付近・上） -->
+          <rect x="6" y="12" width="22" height="16" rx="3" class="lbg"/>
+          <text x="17" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="#7048A8" font-family="sans-serif">辺</text>
+          <!-- 「辺」ラベル（辺2端点付近・下） -->
+          <rect x="6" y="78" width="22" height="16" rx="3" class="lbg"/>
+          <text x="17" y="90" text-anchor="middle" font-size="12" font-weight="700" fill="#7048A8" font-family="sans-serif">辺</text>
+          <!-- 説明ラベル -->
+          <rect x="30" y="94" width="94" height="14" rx="3" class="lbg"/>
+          <text x="77" y="105" text-anchor="middle" font-size="11" fill="#7048A8" font-family="sans-serif">外側の目盛りを読む</text>
+        </svg>
+        <div class="tip" style="background:var(--purple-l);margin-top:0;padding:8px 12px;">
+          <span class="tip-icon">💡</span>
+          <span style="font-size:12px;">向きが反対でも<strong>外側（または内側）の目盛り</strong>を使えばはかれる</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ④ 角の加減と三角定規 -->
+<div class="section">
+  <div class="sec-label">
+    <div class="num-bubble" style="background:var(--orange);color:white;">④</div>
+    <div class="sec-title">角の大きさのたし算・ひき算と三角定規</div>
+  </div>
+  <div class="card">
+    <div class="big-point" style="background:var(--orange-l);border-color:var(--orange);">
+      角の大きさも、長さや数のように<strong>たし算・ひき算</strong>ができる！
+    </div>
+
+    <div style="font-size:14px;font-weight:700;margin-bottom:10px;">📐 三角定規（じょうぎ）の角度</div>
+    <div class="grid2">
+
+      <!-- ▼ 45-45-90 三角定規
+           頂点: A=(20,112) 90°、B=(140,112) 45°、C=(20,10) 45°
+           直角マーク: A点 (20,95)→(37,95)→(37,112)
+           
+           C点(20,10)の45°弧:
+             辺CA(下): r=20 → (20,30)
+             辺CB(斜辺方向 dir=(120,102) unit=(0.762,0.648)): r=20 → (20+15.2,10+13.0)=(35.2,23) ≈ (35,23)
+             CW(sweep=1): (20,30)→(35,23)
+             
+           B点(140,112)の45°弧:
+             辺BA(左): r=20 → (120,112)
+             辺BC(斜辺方向 dir=(-120,-102) unit=(-0.762,-0.648)): r=20 → (140-15.2,112-13.0)=(124.8,99) ≈ (125,99)
+             CCW(sweep=0): (120,112)→(125,99)
+             
+           角度ラベル配置:
+             90°: 直角マーク内側右上 → (40,108) 白背景
+             45°(C): C点の右斜め下(内側) → (28,36) 白背景
+             45°(B): B点の左斜め上(内側) → (104,108) 白背景
+      -->
+      <div style="text-align:center;">
+        <svg width="170" height="135" viewBox="0 0 170 135" style="display:block;margin:0 auto;">
+          <polygon points="20,112 140,112 20,10" fill="#EAF0FF" stroke="#2563C4" stroke-width="2"/>
+          <!-- 直角マーク（A点） -->
+          <polyline points="20,95 37,95 37,112" fill="none" stroke="#2563C4" stroke-width="1.8"/>
+          <!-- C点(20,10)の45°弧: (20,30)→(35,23) sweep=1 -->
+          <path d="M 20 30 A 20 20 0 0 1 35 23" fill="none" stroke="#2563C4" stroke-width="1.8"/>
+          <!-- B点(140,112)の45°弧: (120,112)→(125,99) sweep=0 -->
+          <path d="M 120 112 A 20 20 0 0 0 125 99" fill="none" stroke="#2563C4" stroke-width="1.8"/>
+          <!-- 90°ラベル: 直角マーク内側 (40,96付近) -->
+          <rect x="38" y="94" width="36" height="18" rx="3" class="lbg"/>
+          <text x="56" y="107" text-anchor="middle" font-size="13" font-weight="700" fill="#E8720C" font-family="sans-serif">90°</text>
+          <!-- 45°ラベル (C点内側) -->
+          <rect x="22" y="28" width="36" height="18" rx="3" class="lbg"/>
+          <text x="40" y="41" text-anchor="middle" font-size="13" font-weight="700" fill="#2563C4" font-family="sans-serif">45°</text>
+          <!-- 45°ラベル (B点内側) -->
+          <rect x="96" y="94" width="36" height="18" rx="3" class="lbg"/>
+          <text x="114" y="107" text-anchor="middle" font-size="13" font-weight="700" fill="#2563C4" font-family="sans-serif">45°</text>
+        </svg>
+        <div style="font-size:12px;color:var(--blue);font-weight:700;">45°・45°・90°</div>
+      </div>
+
+      <!-- ▼ 30-60-90 三角定規
+           頂点: A=(12,112) 30°、B=(152,112) 90°、C=(152,10) 60°
+           直角マーク: B点 (135,112)→(135,95)→(152,95)
+           
+           A点(12,112)の30°弧:
+             辺AB(右): r=24 → (36,112)
+             辺AC(斜辺方向 dir=(140,-102) unit=(0.808,-0.589)): r=24 → (12+19.4,112-14.1)=(31.4,97.9) ≈ (31,98)
+             CW(sweep=1): (36,112)→(31,98)
+             → 上向きに抜けて内側の角弧を描く
+             ※ 検証: 頂点A=(12,112), ①(36,112)はAから右に24, ②(31,98)はAから右20, 上14, r=sqrt(20²+14²)=sqrt(400+196)=sqrt(596)≈24.4≈24 ✓
+             
+           C点(152,10)の60°弧:
+             辺CB(下): r=22 → (152,32)
+             辺CA(斜辺方向 dir=(-140,102) unit=(-0.808,0.589)): r=22 → (152-17.8,10+12.9)=(134.2,22.9) ≈ (134,23)
+             sweep=1(CW) から (152,32)→(134,23) に:
+             (152,32): 頂点C(152,10)から真下へ, screen-angle=90°
+             (134,23): C(152,10)からleft-down, dx=-18,dy=13, screen-angle=atan2(13,-18)≈144°
+             CW(sweep=1)で90°→144°通過=内側へ入る ✓
+
+           角度ラベル配置:
+             90°: 直角マーク内側(左上) → (107,108) 白背景
+             30°(A): 角弧の内側 → (28,100) 白背景
+             60°(C): 角弧の内側(C点左下) → (116,32) 白背景
+      -->
+      <div style="text-align:center;">
+        <svg width="170" height="135" viewBox="0 0 170 135" style="display:block;margin:0 auto;">
+          <polygon points="12,112 152,112 152,10" fill="#DFF5EE" stroke="#0E9E7A" stroke-width="2"/>
+          <!-- 直角マーク（B点） -->
+          <polyline points="135,112 135,95 152,95" fill="none" stroke="#0E9E7A" stroke-width="1.8"/>
+          <!-- A点(12,112)の30°弧: (36,112)→(31,98) sweep=1 -->
+          <path d="M 36 112 A 24 24 0 0 1 31 98" fill="none" stroke="#0E9E7A" stroke-width="1.8"/>
+          <!-- C点(152,10)の60°弧: (152,32)→(134,23) sweep=1 -->
+          <path d="M 152 32 A 22 22 0 0 1 134 23" fill="none" stroke="#0E9E7A" stroke-width="1.8"/>
+          <!-- 90°ラベル: 直角マーク内側 (B点) -->
+          <rect x="96" y="94" width="36" height="18" rx="3" class="lbg"/>
+          <text x="114" y="107" text-anchor="middle" font-size="13" font-weight="700" fill="#E8720C" font-family="sans-serif">90°</text>
+          <!-- 30°ラベル (A点弧の内側) -->
+          <rect x="23" y="92" width="36" height="18" rx="3" class="lbg"/>
+          <text x="41" y="105" text-anchor="middle" font-size="13" font-weight="700" fill="#0E9E7A" font-family="sans-serif">30°</text>
+          <!-- 60°ラベル (C点弧の内側・左下) -->
+          <rect x="110" y="26" width="36" height="18" rx="3" class="lbg"/>
+          <text x="128" y="39" text-anchor="middle" font-size="13" font-weight="700" fill="#0E9E7A" font-family="sans-serif">60°</text>
+        </svg>
+        <div style="font-size:12px;color:var(--teal);font-weight:700;">30°・60°・90°</div>
+      </div>
+
+    </div><!-- /grid2 triangles -->
+
+    <div style="font-size:14px;font-weight:700;margin:14px 0 8px;">🔢 組み合わせで求める例</div>
+    <div class="grid2">
+      <div class="mini" style="background:#FFF8EC;">
+        <div class="mini-title" style="color:var(--orange);">たし算の例</div>
+        <div class="mini-body">
+          90° ＋ 45° ＝ <strong style="color:var(--orange);">135°</strong><br>
+          60° ＋ 45° ＝ <strong style="color:var(--orange);">105°</strong><br>
+          45° ＋ 45° ＝ <strong style="color:var(--orange);">90°</strong>
+        </div>
+      </div>
+      <div class="mini" style="background:var(--blue-l);">
+        <div class="mini-title" style="color:var(--blue);">ひき算の例</div>
+        <div class="mini-body">
+          180° － 50° ＝ <strong style="color:var(--blue);">130°</strong><br>
+          90° ＋ 90° ＝ 180°<br>
+          180° － 130° ＝ <strong style="color:var(--blue);">50°</strong>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:14px;font-weight:700;margin:14px 0 8px;">🔺 特別な三角形の角の大きさ</div>
+    <div class="grid2">
+      <div class="mini" style="background:var(--green-l);">
+        <div class="mini-title" style="color:var(--green);">正三角形</div>
+        <div class="mini-body">3つの角がすべて等しい<br>1つの角 ＝ <strong style="color:var(--green);">60°</strong></div>
+      </div>
+      <div class="mini" style="background:var(--teal-l);">
+        <div class="mini-title" style="color:var(--teal);">二等辺三角形</div>
+        <div class="mini-body">底辺の<strong>2つの角が等しい</strong><br>（2つの辺が等しい三角形）</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ⑤ 180°をこえる角 -->
+<div class="section">
+  <div class="sec-label">
+    <div class="num-bubble" style="background:var(--purple);color:white;">⑤</div>
+    <div class="sec-title">180°をこえる角のはかり方</div>
+  </div>
+  <div class="card">
+    <div class="big-point" style="background:var(--purple-l);border-color:var(--purple);">
+      分度器の目盛りは180°までしかない。180°をこえる角は<strong style="color:var(--purple);">工夫して求める！</strong>
+    </div>
+
+    <!--
+      220°の角の設定（両SVG共通）:
+        頂点 V=(90,100)
+        辺1: 0°方向（右）→ V+(80,0) = (170,100)
+        辺2: 220°の角から逆算 → 小角は140°、辺2方向は140°(math)=上左
+          辺2端点: V + 65*(cos140°, -sin140°) = (90-49.8, 100-41.8) = (40.2, 58.2) ≈ (40,58)
+        
+        弧の端点 (半径55):
+          辺1上: (90+55, 100) = (145, 100)
+          辺2上: (90+55*(-0.766), 100-55*0.643) = (90-42.1, 100-35.4) = (47.9,64.6) ≈ (48,65)
+        
+        ① 方法（180°+40°）:
+          大弧(220°): M 145 100 A 55 55 0 1 1 48 65  (large=1, sweep=1 CW)
+          40°残り弧 (180°線と辺2の間):
+            180°線上r=24: (90-24,100)=(66,100)
+            辺2上r=24: (90+24*(-0.766),100-24*0.643) = (90-18.4,100-15.4) = (71.6,84.6) ≈ (72,85)
+            この小弧は辺2(screen angle 220°)から180°線(screen angle 180°)へ
+            sweep=1(CW): screen 220°→180°はCWで行く(220→230→...→360→180は大回りで違う)
+            実際: 220°→180°をCW(増加)方向: 220→270→360/0→180 = 320°と長い。
+            sweep=0(CCW 減少方向): 220→200→180 = 40° ← これが正しい小弧
+            M 66 100 A 24 24 0 0 0 72 85 (large=0, sweep=0 CCW)
+            
+          「40°」ラベル: 弧中央(200° screen angle, r=30)
+            x=90+30*cos(200°_screen)=90+30*(-0.940)=90-28.2=61.8
+            y=100+30*sin(200°_screen)=100+30*(-0.342)=100-10.3=89.7
+            → 白背景 at (44,82) w=28 h=17, text "40°" at (58,92)
+          
+          「220°」ラベル: 大弧の中央付近 (CW 110°位置 = screen angle 0°+110°=110°)
+            x=90+68*cos(110°_screen)=90+68*(-0.342)=90-23.3=66.7
+            y=100+68*sin(110°_screen)=100+68*0.940=100+63.9=163.9 ← viewBox外
+            → screen 145°位置, r=60: x=90+60*cos(145°)=90-49.1=40.9, y=100+60*sin(145°)=100+34.4=134.4
+            白背景 at (24,126) w=44 h=18, text "220°" at (46,138)
+        
+        ② 方法（360°-140°）:
+          小弧(140°): M 145 100 A 55 55 0 0 0 48 65  (large=0, sweep=0 CCW)
+          「140°」ラベル: 小弧の中央 (CCW 70°位置 = screen angle 0°-70°=290° or 360°-70°=290°)
+            r=65: x=90+65*cos(290°)=90+65*0.342=90+22.2=112.2
+                  y=100+65*sin(290°)=100+65*(-0.940)=100-61.1=38.9
+            白背景 at (100,30) w=50 h=18, text "140°" at (125,43)
+          
+          「220°」ラベル: same position at (46,138)
+          大弧（参考用）: M 145 100 A 55 55 0 1 1 48 65 (same, shown dashed)
+    -->
+
+    <div class="grid2">
+      <!-- 方法① -->
+      <div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--purple);">方法① 180°＋残りの角</div>
+        <svg width="100%" viewBox="0 0 180 152" style="display:block;">
+          <!-- 180°の基準補助線（点線） -->
+          <line x1="10" y1="100" x2="90" y2="100" stroke="#ccc" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <!-- 辺1（右方向） -->
+          <line x1="90" y1="100" x2="170" y2="100" stroke="#7048A8" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 辺2（上左方向, 140°math） -->
+          <line x1="90" y1="100" x2="40" y2="58" stroke="#7048A8" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 頂点 -->
+          <circle cx="90" cy="100" r="4" fill="#7048A8"/>
+          <!-- 大弧(220°): M 145 100 A 55 55 0 1 1 48 65 -->
+          <path d="M 145 100 A 55 55 0 1 1 48 65" fill="none" stroke="#E8720C" stroke-width="2.2"/>
+          <!-- 40°残り小弧: M 66 100 A 24 24 0 0 0 72 85 -->
+          <path d="M 66 100 A 24 24 0 0 0 72 85" fill="none" stroke="#1A9E5A" stroke-width="2"/>
+          <!-- 「180°の線」ラベル（補助線上・上方） -->
+          <rect x="5" y="84" width="58" height="14" rx="3" class="lbg"/>
+          <text x="34" y="95" text-anchor="middle" font-size="10" fill="#aaa" font-family="sans-serif">180°の線</text>
+          <!-- 「40°」ラベル: 小弧の内側（白背景） -->
+          <rect x="44" y="82" width="30" height="17" rx="3" class="lbg"/>
+          <text x="59" y="94" text-anchor="middle" font-size="12" font-weight="700" fill="#1A9E5A" font-family="sans-serif">40°</text>
+          <!-- 「220°」ラベル: 大弧の中央付近（白背景） -->
+          <rect x="24" y="125" width="46" height="18" rx="4" class="lbg"/>
+          <text x="47" y="138" text-anchor="middle" font-size="13" font-weight="700" fill="#E8720C" font-family="sans-serif">220°</text>
+        </svg>
+        <div class="formula-box" style="font-size:14px;padding:8px 12px;margin-top:6px;">
+          180° ＋ 40° ＝ <strong>220°</strong>
+        </div>
+      </div>
+      <!-- 方法② -->
+      <div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--blue);">方法② 360°－小さい方の角</div>
+        <svg width="100%" viewBox="0 0 180 152" style="display:block;">
+          <!-- 辺1（右方向） -->
+          <line x1="90" y1="100" x2="170" y2="100" stroke="#2563C4" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 辺2（上左方向） -->
+          <line x1="90" y1="100" x2="40" y2="58" stroke="#2563C4" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 頂点 -->
+          <circle cx="90" cy="100" r="4" fill="#2563C4"/>
+          <!-- 小弧(140°, 上側): M 145 100 A 55 55 0 0 0 48 65 -->
+          <path d="M 145 100 A 55 55 0 0 0 48 65" fill="none" stroke="#D63B3B" stroke-width="2" stroke-dasharray="5 3"/>
+          <!-- 大弧(220°, 下側): M 145 100 A 55 55 0 1 1 48 65 -->
+          <path d="M 145 100 A 55 55 0 1 1 48 65" fill="none" stroke="#2563C4" stroke-width="2.2"/>
+          <!-- 「140°」ラベル: 小弧の上側中央（白背景）
+               CCW 70°位置 (screen 290°), r=65: (112.2, 38.9)
+          -->
+          <rect x="100" y="28" width="50" height="18" rx="4" class="lbg"/>
+          <text x="125" y="41" text-anchor="middle" font-size="12" font-weight="700" fill="#D63B3B" font-family="sans-serif">140°</text>
+          <!-- 「220°」ラベル: 大弧の中央付近（白背景） -->
+          <rect x="24" y="125" width="46" height="18" rx="4" class="lbg"/>
+          <text x="47" y="138" text-anchor="middle" font-size="13" font-weight="700" fill="#2563C4" font-family="sans-serif">220°</text>
+        </svg>
+        <div class="formula-box" style="font-size:14px;padding:8px 12px;margin-top:6px;">
+          360° － 140° ＝ <strong>220°</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="background:var(--purple-l);">
+      <span class="tip-icon">💡</span>
+      <span>どちらの方法でも同じ答えになる。どちらの方法でも OK！</span>
+    </div>
+  </div>
+</div>
+
+<!-- ⑥ 角のかき方 -->
+<div class="section">
+  <div class="sec-label">
+    <div class="num-bubble" style="background:var(--red);color:white;">⑥</div>
+    <div class="sec-title">角のかき方（分度器を使う）</div>
+  </div>
+  <div class="card">
+    <div style="font-size:14px;font-weight:700;margin-bottom:10px;">📖 例：30°の角をかく手順</div>
+    <div class="step-row">
+      <div class="step-box" style="background:#1A9E5A;">① 辺アイをかく</div>
+      <div class="step-arr">→</div>
+      <div class="step-box" style="background:#2563C4;">② 中心をAに・0°を辺アイに合わせる</div>
+      <div class="step-arr">→</div>
+      <div class="step-box" style="background:#E8720C;">③ 30°の目盛りに点をうつ</div>
+      <div class="step-arr">→</div>
+      <div class="step-box" style="background:#D63B3B;">④ Aと点を直線で結ぶ</div>
+    </div>
+
+    <!--
+      30°完成図:
+        頂点 A=(22,108)
+        辺アイ: A→(148,108) 右（水平）
+        30°辺: A→(130,50) 上右
+          方向(108,58): 30°を確認
+          atan2(108-50, 130-22) = atan2(58,108) ≈ 28.2°... 少し調整
+          正確な30°端点: A + len*(cos30°, -sin30°) = (22+len*0.866, 108-len*0.5)
+          len=118: (22+102.2, 108-59) = (124.2, 49) ≈ (124,49)
+          
+        弧: 半径52
+          辺アイ上: A+(52,0) = (74,108)
+          30°辺上: A+52*(cos30°,-sin30°) = (22+45.0, 108-26) = (67,82)
+          
+          検証: |(74,108)-(22,108)| = 52 ✓
+                |(67,82)-(22,108)| = sqrt(45²+26²) = sqrt(2025+676) = sqrt(2701) ≈ 52.0 ✓
+          
+          弧: 辺アイ(screen 0°) → 30°辺(screen ≈-30°=330°)
+          sweep=0 (CCW, 0°→-30°の小弧):
+          M 74 108 A 52 52 0 0 0 67 82
+          
+        「30°」ラベル: 弧内側の中央 (15°位置, r=42)
+          x=22+42*cos(-15°_screen) = 22+42*0.966 = 22+40.6 = 62.6
+          y=108+42*sin(-15°_screen) = 108+42*(-0.259) = 108-10.9 = 97.1
+          白背景 at (52,88) w=36 h=18, text "30°" at (70,100)
+          
+        「A」ラベル: Aの左下 (8,122)
+        「イ」ラベル: 辺アイ右端下 (143,122)
+        点のラベル: 30°辺先端上 (127,41)
+    -->
+    <div style="margin-top:12px; display:flex; gap:16px; flex-wrap:wrap; align-items:flex-start;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+        <svg width="170" height="130" viewBox="0 0 170 130" style="display:block;">
+          <!-- 辺アイ（水平） -->
+          <line x1="22" y1="108" x2="148" y2="108" stroke="#1A9E5A" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 30°の辺 -->
+          <line x1="22" y1="108" x2="124" y2="49" stroke="#D63B3B" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 弧: M 74 108 A 52 52 0 0 0 67 82 (CCW small arc) -->
+          <path d="M 74 108 A 52 52 0 0 0 67 82" fill="none" stroke="#E8720C" stroke-width="2.2"/>
+          <!-- 頂点A -->
+          <circle cx="22" cy="108" r="4" fill="#1A9E5A"/>
+          <!-- 30°辺先端の点 -->
+          <circle cx="124" cy="49" r="3.5" fill="#D63B3B"/>
+          <!-- 「30°」ラベル：弧の内側（白背景） -->
+          <rect x="52" y="88" width="36" height="18" rx="4" class="lbg"/>
+          <text x="70" y="101" text-anchor="middle" font-size="14" font-weight="700" fill="#E8720C" font-family="sans-serif">30°</text>
+          <!-- 「A」ラベル -->
+          <rect x="6" y="112" width="16" height="14" rx="2" class="lbg"/>
+          <text x="14" y="122" text-anchor="middle" font-size="13" font-weight="700" fill="#1A9E5A" font-family="sans-serif">A</text>
+          <!-- 「イ」ラベル -->
+          <rect x="140" y="112" width="18" height="14" rx="2" class="lbg"/>
+          <text x="149" y="122" text-anchor="middle" font-size="13" font-weight="700" fill="#1A9E5A" font-family="sans-serif">イ</text>
+          <!-- 「点」ラベル：30°辺の先端の上 -->
+          <rect x="112" y="36" width="22" height="14" rx="2" class="lbg"/>
+          <text x="123" y="47" text-anchor="middle" font-size="11" fill="#D63B3B" font-family="sans-serif">点</text>
+        </svg>
+        <div class="angle-label" style="color:var(--red);">完成！30°の角</div>
+      </div>
+    </div>
+
+    <div class="tip" style="background:var(--green-l);">
+      <span class="tip-icon">💡</span>
+      <span>180°をこえる角をかくときは、「180°まで先にかいて、残りを足す」工夫をしよう！</span>
+    </div>
+  </div>
+</div>
+
+<!-- まとめ -->
+<div class="summary-card">
+  <div class="summary-title">📝 この単元のまとめ</div>
+  <div class="sum-item"><div class="sum-dot"></div><div>角は「1つの頂点から出る2つの辺」がつくる形。<strong>辺の長さに関係なく</strong>開きぐあいで決まる</div></div>
+  <div class="sum-item"><div class="sum-dot"></div><div>角の単位は「度（°）」。直角＝90°、半回転＝180°、1回転＝360°</div></div>
+  <div class="sum-item"><div class="sum-dot"></div><div>分度器の使い方：<strong>中心を頂点・0°の線を辺</strong>に合わせて目盛りを読む</div></div>
+  <div class="sum-item"><div class="sum-dot"></div><div>辺が短いときは<strong>定規で辺を伸ばして</strong>からはかる</div></div>
+  <div class="sum-item"><div class="sum-dot"></div><div>三角定規：45°・45°・90° と 30°・60°・90°。<strong>組み合わせ</strong>でいろいろな角が作れる</div></div>
+  <div class="sum-item"><div class="sum-dot"></div><div>180°をこえる角は「<strong>180°＋残り</strong>」または「<strong>360°－小さい方の角</strong>」で求める</div></div>
+  <div class="sum-item"><div class="sum-dot"></div><div>角のかき方：辺をかく→中心・0°を合わせる→目盛りに点→直線でつなぐ</div></div>
+</div>
+
+</div><!-- /container -->
+</body>
+</html>

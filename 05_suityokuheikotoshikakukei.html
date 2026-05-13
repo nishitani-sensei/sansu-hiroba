@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>垂直・平行と四角形 まとめ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap');
+  :root {
+    --blue:    #2563C4; --blue-l:   #EAF0FF;
+    --green:   #1A9E5A; --green-l:  #E3F7ED;
+    --purple:  #7048A8; --purple-l: #F0EBFA;
+    --orange:  #E8720C; --orange-l: #FFF0E0;
+    --red:     #D63B3B; --red-l:    #FDEAEA;
+    --teal:    #0E9E7A; --teal-l:   #DFF5EE;
+    --gold:    #B07800; --gold-l:   #FFF8E0;
+    --text:    #1c1b18; --muted: #666; --gray: #f6f5f0;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Noto Sans JP',sans-serif; background:#fafaf7; color:var(--text); line-height:1.75; padding-bottom:3rem; }
+
+  /* Hero */
+  .hero { background:linear-gradient(135deg,#0d3d7a 0%,#2563C4 55%,#6a9de0 100%); color:white; padding:2.5rem 1.5rem 2rem; text-align:center; position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; inset:0; background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='1.5' fill='white' fill-opacity='.07'/%3E%3C/svg%3E") repeat; pointer-events:none; }
+  .hero-unit  { font-size:12px; letter-spacing:3px; opacity:.75; margin-bottom:6px; }
+  .hero-title { font-size:clamp(24px,6vw,40px); font-weight:900; letter-spacing:-1px; margin-bottom:8px; }
+  .hero-sub   { font-size:14px; opacity:.85; margin-bottom:10px; }
+  .hero-pill  { display:inline-block; background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.35); border-radius:99px; font-size:12px; padding:4px 14px; }
+
+  /* Layout */
+  .container { max-width:700px; margin:0 auto; padding:0 1rem; }
+  .section   { margin-top:2rem; }
+  .sec-label { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .num-bubble{ width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; flex-shrink:0; }
+  .sec-title { font-size:18px; font-weight:700; }
+  .card      { background:white; border-radius:14px; padding:1.2rem 1.4rem; border:1.5px solid #e8e6de; box-shadow:0 2px 8px rgba(0,0,0,.04); }
+  .big-point { font-size:15px; font-weight:700; line-height:1.6; background:var(--blue-l); border-left:4px solid var(--blue); border-radius:0 10px 10px 0; padding:10px 16px; margin-bottom:14px; }
+  .grid2     { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .grid3     { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+  @media(max-width:500px){ .grid2{grid-template-columns:1fr;} .grid3{grid-template-columns:1fr;} }
+  .mini      { border-radius:10px; padding:12px 14px; }
+  .mini-title{ font-size:12px; font-weight:700; margin-bottom:6px; }
+  .mini-body { font-size:13px; line-height:1.65; }
+  .tip       { border-radius:10px; padding:10px 14px; font-size:13px; line-height:1.65; margin-top:10px; display:flex; gap:8px; align-items:flex-start; }
+  .tip-icon  { font-size:15px; flex-shrink:0; margin-top:1px; }
+  .svg-label { font-size:14px; font-weight:700; margin:14px 0 8px; }
+  .summary-card { background:linear-gradient(135deg,#0d3d7a,#2563C4); color:white; border-radius:16px; padding:1.5rem 1.6rem; margin-top:2rem; }
+  .summary-title{ font-size:17px; font-weight:700; margin-bottom:12px; }
+  .sum-item  { display:flex; gap:10px; align-items:flex-start; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.18); font-size:14px; }
+  .sum-item:last-child{ border-bottom:none; }
+  .sum-dot   { width:8px; height:8px; border-radius:50%; background:#a8c8ff; flex-shrink:0; margin-top:6px; }
+
+  /* ===== SITES BAR ===== */
+  .sites-bar { background:#0a0a1a; border-bottom:1px solid #2E2E55; padding:0 16px; height:44px; display:flex; align-items:center; gap:10px; position:sticky; top:0; z-index:200; }
+  .sites-logo { font-size:0.78rem; color:#6666aa; display:flex; align-items:center; gap:6px; }
+  .sites-logo-icon { width:18px; height:18px; background:#1a73e8; border-radius:3px; display:flex; align-items:center; justify-content:center; color:white; font-weight:900; font-size:11px; }
+  .sites-title { font-size:0.88rem; font-weight:500; color:#aaaacc; flex:1; }
+  .sites-badge { font-size:0.68rem; background:rgba(26,115,232,0.15); color:#5588cc; padding:2px 10px; border-radius:50px; font-weight:600; border:1px solid rgba(26,115,232,0.3); }
+  .back-bar { background:#0D0D1A; padding:10px 16px; border-bottom:2px solid #2E2E55; display:flex; align-items:center; }
+  .back-btn { display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg,#FFD700,#FFA500); border:none; border-radius:50px; padding:8px 20px; color:#0D0D1A; font-size:0.88rem; font-weight:900; cursor:pointer; text-decoration:none; font-family:inherit; transition:opacity 0.15s; box-shadow:0 2px 12px rgba(255,215,0,0.3); }
+  .back-btn:hover { opacity:0.85; }
+</style>
+</head>
+<body>
+<div class="sites-bar">
+  <div class="sites-logo">
+    <div class="sites-logo-icon">S</div>
+    <span>Google サイト</span>
+  </div>
+  <div class="sites-title">算数ひろば｜文関小学校</div>
+  <span class="sites-badge">🔒 リンクを知る人のみ</span>
+</div>
+<div class="back-bar">
+  <a class="back-btn" href="index.html">🏠 拠点にもどる</a>
+</div>
+
+
+
+<div class="hero">
+  <div class="hero-unit">わくわく算数 4年上 ▶ 第5単元</div>
+  <div class="hero-title">垂直・平行と四角形 📐</div>
+  <div class="hero-sub">直線の関係と四角形の仲間を整理しよう！</div>
+  <div class="hero-pill">全14時間</div>
+</div>
+
+<div class="container">
+
+<!-- ① 垂直 -->
+<div class="section">
+  <div class="sec-label">
+    <div class="num-bubble" style="background:var(--blue);color:white;">①</div>
+    <div class="sec-title">垂直（すいちょく）とは？</div>
+  </div>
+  <div class="card">
+    <div class="big-point">
+      ２つの直線が<strong>直角（90°）で交わる</strong>とき、この２直線は「垂直」！<br>
+      三角定規の直角のかどを使って確かめられる。
+    </div>
+
+    <div class="svg-label">📐 垂直の図</div>
+    <!--
+      viewBox="0 0 600 180"
+      横線: y=90, x=30→570
+      縦線: x=200, y=10→170
+      直角マーク: x=200,y=90 から 右上16px角
+      角度ラベル: 右側
+      ポイントボックス: x=280, y=30
+    -->
+    <svg width="100%" viewBox="0 0 600 180" style="display:block;">
+      <defs>
+        <marker id="arr" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M1 1L7 4L1 7" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round"/>
+        </marker>
+      </defs>
+
+      <!-- 横線（直線ℓ） -->
+      <line x1="30" y1="90" x2="530" y2="90" stroke="#2563C4" stroke-width="3" stroke-linecap="round"/>
+      <!-- 縦線（直線m） -->
+      <line x1="200" y1="10" x2="200" y2="170" stroke="#D63B3B" stroke-width="3" stroke-linecap="round"/>
+
+      <!-- 直角マーク -->
+      <path d="M200 90 L200 72 L218 72 L218 90" fill="none" stroke="#333" stroke-width="2" stroke-linejoin="miter"/>
+
+      <!-- 90°ラベル -->
+      <rect x="222" y="60" width="40" height="22" rx="4" fill="#FFF8E0" stroke="#B07800" stroke-width="1"/>
+      <text x="242" y="76" text-anchor="middle" font-size="13" font-weight="700" fill="#B07800" font-family="Noto Sans JP,sans-serif">90°</text>
+
+      <!-- 直線名ラベル -->
+      <rect x="32" y="72" width="28" height="20" rx="3" fill="#EAF0FF"/>
+      <text x="46" y="86" text-anchor="middle" font-size="12" font-weight="700" fill="#2563C4" font-family="Noto Sans JP,sans-serif">直線ℓ</text>
+      <rect x="206" y="12" width="28" height="20" rx="3" fill="#FDEAEA"/>
+      <text x="220" y="26" text-anchor="middle" font-size="12" font-weight="700" fill="#D63B3B" font-family="Noto Sans JP,sans-serif">直線m</text>
+
+      <!-- ポイントボックス -->
+      <rect x="290" y="32" width="240" height="115" rx="10" fill="#EAF0FF" stroke="#2563C4" stroke-width="1.5"/>
+      <text x="410" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#2563C4" font-family="Noto Sans JP,sans-serif">垂直のポイント</text>
+      <text x="310" y="82" font-size="12" fill="#1c1b18" font-family="Noto Sans JP,sans-serif">・交わる角が すべて 90°</text>
+      <text x="310" y="104" font-size="12" fill="#1c1b18" font-family="Noto Sans JP,sans-serif">・三角定規の直角で確かめる</text>
+      <text x="310" y="126" font-size="12" fill="#1c1b18" font-family="Noto Sans JP,sans-serif">・記号：直線ℓ ⊥ 直線m</text>
+    </svg>
+
+    <div class="tip" style="background:var(--blue-l);">
+      <span class="tip-icon">💡</span>
+      <span>「垂直」かどうかは<strong>三角定規の直角のかど</strong>を直線に当てて確かめよう。ぴったり合えば垂直！</span>
+    </div>
+  </div>
+</div>
+
+<!-- ② 平行 -->
+<div class="section">
+  <div class="sec-label">
+    <div class="num-bubble" style="background:var(--green);color:white;">②</div>
+    <div class="sec-title">平行（へいこう）とは？</div>
+  </div>
+  <div class="card">
+    <div class="big-point" style="background:var(--green-l);border-color:var(--green);">
+      ２つの直線がどこまでのばしても<strong>交わらない</strong>とき「平行」！<br>
+      平行な２直線の間の<strong>間かくはどこも同じ</strong>。
+    </div>
+
+    <div class="svg-label">📏 平行の図</div>
+    <!--
+      viewBox="0 0 600 200"
+      直線ℓ: y=55, x=20→430
+      直線m: y=130, x=20→430
+      垂直方向の間かく矢印: x=480, y=55→130
+      ポイントボックス右側 x=450
+    -->
+    <svg width="100%" viewBox="0 0 600 200" style="display:block;">
+      <defs>
+        <marker id="arr2" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M1 1L7 4L1 7" fill="none" stroke="#1A9E5A" stroke-width="1.5" stroke-linecap="round"/>
+        </marker>
+        <marker id="arr2b" viewBox="0 0 8 8" refX="2" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M7 1L1 4L7 7" fill="none" stroke="#1A9E5A" stroke-width="1.5" stroke-linecap="round"/>
+        </marker>
+      </defs>
+
+      <!-- 直線ℓ -->
+      <line x1="20" y1="55" x2="430" y2="55" stroke="#1A9E5A" stroke-width="3" stroke-linecap="round"/>
+      <!-- 直線m -->
+      <line x1="20" y1="140" x2="430" y2="140" stroke="#0E9E7A" stroke-width="3" stroke-linecap="round"/>
+
+      <!-- 等間隔の補助線（破線） -->
+      <line x1="100" y1="55" x2="100" y2="140" stroke="#aaa" stroke-width="1.2" stroke-dasharray="4,4"/>
+      <line x1="220" y1="55" x2="220" y2="140" stroke="#aaa" stroke-width="1.2" stroke-dasharray="4,4"/>
+      <line x1="340" y1="55" x2="340" y2="140" stroke="#aaa" stroke-width="1.2" stroke-dasharray="4,4"/>
+
+      <!-- 間かくの同じラベル -->
+      <rect x="86" y="86" width="28" height="16" rx="3" fill="#fffef8"/>
+      <text x="100" y="98" text-anchor="middle" font-size="11" fill="#888" font-family="Noto Sans JP,sans-serif">同じ</text>
+      <rect x="206" y="86" width="28" height="16" rx="3" fill="#fffef8"/>
+      <text x="220" y="98" text-anchor="middle" font-size="11" fill="#888" font-family="Noto Sans JP,sans-serif">同じ</text>
+      <rect x="326" y="86" width="28" height="16" rx="3" fill="#fffef8"/>
+      <text x="340" y="98" text-anchor="middle" font-size="11" fill="#888" font-family="Noto Sans JP,sans-serif">同じ</text>
+
+      <!-- 直線名ラベル -->
+      <rect x="22" y="38" width="28" height="18" rx="3" fill="#E3F7ED"/>
+      <text x="36" y="51" text-anchor="middle" font-size="12" font-weight="700" fill="#1A9E5A" font-family="Noto Sans JP,sans-serif">直線ℓ</text>
+      <rect x="22" y="148" width="28" height="18" rx="3" fill="#DFF5EE"/>
+      <text x="36" y="161" text-anchor="middle" font-size="12" font-weight="700" fill="#0E9E7A" font-family="Noto Sans JP,sans-serif">直線m</text>
+
+      <!-- ポイントボックス -->
+      <rect x="446" y="20" width="146" height="160" rx="10" fill="#E3F7ED" stroke="#1A9E5A" stroke-width="1.5"/>
+      <text x="519" y="46" text-anchor="middle" font-size="13" font-weight="700" fill="#1A9E5A" font-family="Noto Sans JP,sans-serif">平行のポイント</text>
+      <text x="460" y="70" font-size="11" fill="#1c1b18" font-family="Noto Sans JP,sans-serif">・交わらない</text>
+      <text x="460" y="92" font-size="11" fill="#1c1b18" font-family="Noto Sans JP,sans-serif">・間かくが同じ</text>
+      <text x="460" y="114" font-size="11" fill="#1c1b18" font-family="Noto Sans JP,sans-serif">・三角定規2枚で</text>
+      <text x="460" y="134" font-size="11" fill="#1c1b18" font-family="Noto Sans JP,sans-serif">  かく</text>
+      <text x="460" y="156" font-size="11" fill="#1c1b18" font-family="Noto Sans JP,sans-serif">・記号：ℓ∥m</text>
+    </svg>
+
+    <div class="grid2" style="margin-top:10px;">
+      <div class="mini" style="background:var(--green-l);">
+        <div class="mini-title" style="color:var(--green);">平行な直線のかき方</div>
+        <div class="mini-body">① 三角定規の1枚を直線にあてる<br>② もう1枚をそえてずらす<br>③ ずれた位置で直線をひく</div>
+      </div>
+      <div class="mini" style="background:#f6f5f0;">
+        <div class="mini-title" style="color:#555;">垂直との違い</div>
+        <div class="mini-body">垂直 → <strong>交わる（90°）</strong><br>平行 → <strong>交わらない</strong><br>どちらも三角定規で調べる</div>
+      </div>
+    </div>
+
+    <div class="tip" style="background:var(--green-l);">
+      <span class="tip-icon">💡</span>
+      <span>１本の直線に<strong>垂直な２直線</strong>は、たがいに<strong>平行</strong>になる！これが平行かどうか調べるコツ。</span>
+    </div>
+  </div>
+</div>
+
+<!-- ③ 四角形の仲間 -->
+<div class="section">
+  <div class="sec-label">
+    <div class="num-bubble" style="background:var(--purple);color:white;">③</div>
+    <div class="sec-title">四角形の仲間</div>
+  </div>
+  <div class="card">
+    <div class="big-point" style="background:var(--purple-l);border-color:var(--purple);">
+      平行な辺の<strong>組の数</strong>によって四角形の仲間が決まる！<br>
+      辺の長さや角の大きさにも注目しよう。
+    </div>
+
+    <div class="svg-label">🔷 台形・平行四辺形・ひし形・長方形・正方形</div>
+    <!--
+      5種類の四角形を横に並べて比較
+      viewBox="0 0 680 310"
+      各ボックス幅120px、間隔16px、左余白10px
+      台形:x=10, 平行四辺形:x=146, ひし形:x=282, 長方形:x=418, 正方形:x=554
+
+      各ボックス:
+        背景rect: y=0,h=310
+        図形SVG: y=10〜120
+        名前: y=130
+        特徴テキスト: y=150〜
+    -->
+    <svg width="100%" viewBox="0 0 680 310" style="display:block;">
+
+      <!-- ===== 台形 ===== -->
+      <rect x="10" y="0" width="120" height="305" rx="10" fill="#FFF0E0" stroke="#E8720C" stroke-width="1.2"/>
+      <!-- 台形の図形（上辺短め） -->
+      <polygon points="40,30 90,30 110,100 20,100" fill="none" stroke="#E8720C" stroke-width="2.5" stroke-linejoin="round"/>
+      <!-- 平行マーク（上辺・下辺） -->
+      <line x1="58" y1="24" x2="58" y2="36" stroke="#E8720C" stroke-width="1.5"/>
+      <line x1="58" y1="94" x2="58" y2="106" stroke="#E8720C" stroke-width="1.5"/>
+      <line x1="73" y1="24" x2="73" y2="36" stroke="#E8720C" stroke-width="1.5"/>
+      <line x1="65" y1="94" x2="65" y2="106" stroke="#E8720C" stroke-width="1.5"/>
+      <!-- 名前 -->
+      <text x="70" y="125" text-anchor="middle" font-size="14" font-weight="700" fill="#E8720C" font-family="Noto Sans JP,sans-serif">台形</text>
+      <!-- 特徴 -->
+      <rect x="18" y="136" width="104" height="24" rx="5" fill="#FFE0C0"/>
+      <text x="70" y="153" text-anchor="middle" font-size="11" font-weight="700" fill="#B85000" font-family="Noto Sans JP,sans-serif">１組の辺が平行</text>
+      <text x="20" y="180" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">・向かい合う辺が</text>
+      <text x="20" y="196" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">  １組だけ平行</text>
+      <text x="20" y="218" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">・平行な辺を</text>
+      <text x="20" y="234" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">  「上底・下底」</text>
+      <text x="20" y="256" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">  という</text>
+
+      <!-- ===== 平行四辺形 ===== -->
+      <rect x="146" y="0" width="120" height="305" rx="10" fill="#EAF0FF" stroke="#2563C4" stroke-width="1.2"/>
+      <!-- 平行四辺形の図形 -->
+      <polygon points="166,100 226,100 246,30 186,30" fill="none" stroke="#2563C4" stroke-width="2.5" stroke-linejoin="round"/>
+      <!-- 辺の等しさマーク（上下） -->
+      <line x1="202" y1="24" x2="209" y2="36" stroke="#2563C4" stroke-width="1.5"/>
+      <line x1="193" y1="94" x2="200" y2="106" stroke="#2563C4" stroke-width="1.5"/>
+      <!-- 辺の等しさマーク（左右） -->
+      <line x1="173" y1="60" x2="181" y2="66" stroke="#E8720C" stroke-width="1.5"/>
+      <line x1="238" y1="60" x2="246" y2="66" stroke="#E8720C" stroke-width="1.5"/>
+      <!-- 名前 -->
+      <text x="206" y="125" text-anchor="middle" font-size="14" font-weight="700" fill="#2563C4" font-family="Noto Sans JP,sans-serif">平行四辺形</text>
+      <!-- 特徴 -->
+      <rect x="154" y="136" width="104" height="24" rx="5" fill="#C8D8FF"/>
+      <text x="206" y="153" text-anchor="middle" font-size="11" font-weight="700" fill="#2563C4" font-family="Noto Sans JP,sans-serif">２組の辺が平行</text>
+      <text x="156" y="180" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">・向かいの辺が</text>
+      <text x="156" y="196" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">  平行で等しい</text>
+      <text x="156" y="218" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">・向かいの角が</text>
+      <text x="156" y="234" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">  等しい</text>
+      <text x="156" y="256" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">・対角線は互いを</text>
+      <text x="156" y="272" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">  二等分する</text>
+
+      <!-- ===== ひし形 ===== -->
+      <rect x="282" y="0" width="120" height="305" rx="10" fill="#DFF5EE" stroke="#1A9E5A" stroke-width="1.2"/>
+      <!-- ひし形の図形（菱形） -->
+      <polygon points="342,18 382,65 342,112 302,65" fill="none" stroke="#1A9E5A" stroke-width="2.5" stroke-linejoin="round"/>
+      <!-- 4辺等しいマーク -->
+      <line x1="356" y1="36" x2="368" y2="42" stroke="#1A9E5A" stroke-width="1.5"/>
+      <line x1="368" y1="84" x2="356" y2="90" stroke="#1A9E5A" stroke-width="1.5"/>
+      <line x1="316" y1="84" x2="328" y2="90" stroke="#1A9E5A" stroke-width="1.5"/>
+      <line x1="316" y1="42" x2="328" y2="36" stroke="#1A9E5A" stroke-width="1.5"/>
+      <!-- 名前 -->
+      <text x="342" y="130" text-anchor="middle" font-size="14" font-weight="700" fill="#1A9E5A" font-family="Noto Sans JP,sans-serif">ひし形</text>
+      <!-- 特徴 -->
+      <rect x="290" y="136" width="104" height="24" rx="5" fill="#A8EAC8"/>
+      <text x="342" y="153" text-anchor="middle" font-size="11" font-weight="700" fill="#0A6E3A" font-family="Noto Sans JP,sans-serif">４辺が全部等しい</text>
+      <text x="292" y="180" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">・２組の辺が平行</text>
+      <text x="292" y="196" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">・向かいの角が等しい</text>
+      <text x="292" y="218" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">・対角線が垂直に</text>
+      <text x="292" y="234" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">  交わり二等分</text>
+
+      <!-- ===== 長方形 ===== -->
+      <rect x="418" y="0" width="120" height="305" rx="10" fill="#F0EBFA" stroke="#7048A8" stroke-width="1.2"/>
+      <!-- 長方形の図形 -->
+      <rect x="436" y="28" width="84" height="84" rx="0" fill="none" stroke="#7048A8" stroke-width="2.5"/>
+      <!-- 直角マーク（4隅） -->
+      <path d="M436 28 L436 42 L450 42" fill="none" stroke="#7048A8" stroke-width="1.5" stroke-linejoin="miter"/>
+      <path d="M520 28 L520 42 L506 42" fill="none" stroke="#7048A8" stroke-width="1.5" stroke-linejoin="miter"/>
+      <path d="M520 112 L520 98 L506 98" fill="none" stroke="#7048A8" stroke-width="1.5" stroke-linejoin="miter"/>
+      <path d="M436 112 L436 98 L450 98" fill="none" stroke="#7048A8" stroke-width="1.5" stroke-linejoin="miter"/>
+      <!-- 辺の等しさマーク -->
+      <line x1="470" y1="20" x2="470" y2="36" stroke="#7048A8" stroke-width="1.5"/>
+      <line x1="484" y1="20" x2="484" y2="36" stroke="#7048A8" stroke-width="1.5"/>
+      <line x1="470" y1="104" x2="470" y2="120" stroke="#7048A8" stroke-width="1.5"/>
+      <line x1="484" y1="104" x2="484" y2="120" stroke="#7048A8" stroke-width="1.5"/>
+      <!-- 名前 -->
+      <text x="478" y="130" text-anchor="middle" font-size="14" font-weight="700" fill="#7048A8" font-family="Noto Sans JP,sans-serif">長方形</text>
+      <!-- 特徴 -->
+      <rect x="426" y="136" width="104" height="24" rx="5" fill="#D8C8F0"/>
+      <text x="478" y="153" text-anchor="middle" font-size="11" font-weight="700" fill="#4a2a80" font-family="Noto Sans JP,sans-serif">全角が直角(90°)</text>
+      <text x="428" y="180" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">・２組の辺が平行</text>
+      <text x="428" y="196" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">・向かいの辺が等しい</text>
+      <text x="428" y="218" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">・対角線の長さが</text>
+      <text x="428" y="234" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">  等しく二等分</text>
+
+      <!-- ===== 正方形 ===== -->
+      <rect x="554" y="0" width="120" height="305" rx="10" fill="#FDEAEA" stroke="#D63B3B" stroke-width="1.2"/>
+      <!-- 正方形の図形 -->
+      <rect x="572" y="28" width="84" height="84" rx="0" fill="none" stroke="#D63B3B" stroke-width="2.5"/>
+      <!-- 直角マーク（4隅） -->
+      <path d="M572 28 L572 42 L586 42" fill="none" stroke="#D63B3B" stroke-width="1.5" stroke-linejoin="miter"/>
+      <path d="M656 28 L656 42 L642 42" fill="none" stroke="#D63B3B" stroke-width="1.5" stroke-linejoin="miter"/>
+      <path d="M656 112 L656 98 L642 98" fill="none" stroke="#D63B3B" stroke-width="1.5" stroke-linejoin="miter"/>
+      <path d="M572 112 L572 98 L586 98" fill="none" stroke="#D63B3B" stroke-width="1.5" stroke-linejoin="miter"/>
+      <!-- 全辺等しいマーク（4辺） -->
+      <line x1="606" y1="20" x2="606" y2="36" stroke="#D63B3B" stroke-width="1.5"/>
+      <line x1="614" y1="20" x2="614" y2="36" stroke="#D63B3B" stroke-width="1.5"/>
+      <line x1="606" y1="104" x2="606" y2="120" stroke="#D63B3B" stroke-width="1.5"/>
+      <line x1="614" y1="104" x2="614" y2="120" stroke="#D63B3B" stroke-width="1.5"/>
+      <line x1="564" y1="62" x2="580" y2="62" stroke="#D63B3B" stroke-width="1.5"/>
+      <line x1="564" y1="70" x2="580" y2="70" stroke="#D63B3B" stroke-width="1.5"/>
+      <line x1="648" y1="62" x2="664" y2="62" stroke="#D63B3B" stroke-width="1.5"/>
+      <line x1="648" y1="70" x2="664" y2="70" stroke="#D63B3B" stroke-width="1.5"/>
+      <!-- 名前 -->
+      <text x="614" y="130" text-anchor="middle" font-size="14" font-weight="700" fill="#D63B3B" font-family="Noto Sans JP,sans-serif">正方形</text>
+      <!-- 特徴 -->
+      <rect x="562" y="136" width="104" height="24" rx="5" fill="#FBCACA"/>
+      <text x="614" y="153" text-anchor="middle" font-size="11" font-weight="700" fill="#A02020" font-family="Noto Sans JP,sans-serif">全辺等しく全角直角</text>
+      <text x="564" y="180" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">・２組の辺が平行</text>
+      <text x="564" y="196" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">・４辺すべて等しい</text>
+      <text x="564" y="218" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">・対角線が等しく</text>
+      <text x="564" y="234" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">  垂直に交わる</text>
+      <text x="564" y="256" font-size="10" fill="#555" font-family="Noto Sans JP,sans-serif">  （長方形＋ひし形）</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ④ 四角形の関係図 -->
+<div class="section">
+  <div class="sec-label">
+    <div class="num-bubble" style="background:var(--teal);color:white;">④</div>
+    <div class="sec-title">四角形の仲間の関係</div>
+  </div>
+  <div class="card">
+    <div class="big-point" style="background:var(--teal-l);border-color:var(--teal);">
+      四角形は<strong>条件が増えるほど</strong>、特別な仲間になっていく！<br>
+      正方形は長方形でもひし形でもある。
+    </div>
+
+    <div class="svg-label">🗂 四角形の包み関係</div>
+    <!--
+      viewBox="0 0 600 280"
+      四角形（一番外）: 大きい楕円 cx=300, cy=140
+      台形（中）: やや小さい楕円
+      平行四辺形（中）: さらに小さい
+      長方形・ひし形（小）: 左右分け
+      正方形（最小・中央）
+    -->
+    <svg width="100%" viewBox="0 0 600 290" style="display:block;">
+      <!-- 四角形（最外） -->
+      <ellipse cx="300" cy="148" rx="292" ry="135" fill="#FFF8F0" stroke="#E8720C" stroke-width="2" stroke-dasharray="6,3"/>
+      <rect x="14" y="18" width="96" height="22" rx="4" fill="#FFF0E0"/>
+      <text x="62" y="33" text-anchor="middle" font-size="13" font-weight="700" fill="#E8720C" font-family="Noto Sans JP,sans-serif">四角形（全て）</text>
+
+      <!-- 台形 -->
+      <ellipse cx="300" cy="155" rx="240" ry="110" fill="#FFF0E0" stroke="#E8720C" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <rect x="30" y="50" width="56" height="22" rx="4" fill="#FFE0C0"/>
+      <text x="58" y="65" text-anchor="middle" font-size="12" font-weight="700" fill="#B85000" font-family="Noto Sans JP,sans-serif">台形</text>
+
+      <!-- 平行四辺形 -->
+      <ellipse cx="300" cy="163" rx="186" ry="84" fill="#EAF0FF" stroke="#2563C4" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <rect x="64" y="84" width="92" height="22" rx="4" fill="#C8D8FF"/>
+      <text x="110" y="99" text-anchor="middle" font-size="12" font-weight="700" fill="#1040A0" font-family="Noto Sans JP,sans-serif">平行四辺形</text>
+
+      <!-- 長方形（左） -->
+      <ellipse cx="228" cy="175" rx="96" ry="58" fill="#F0EBFA" stroke="#7048A8" stroke-width="1.5"/>
+      <text x="200" y="165" text-anchor="middle" font-size="12" font-weight="700" fill="#7048A8" font-family="Noto Sans JP,sans-serif">長方形</text>
+
+      <!-- ひし形（右） -->
+      <ellipse cx="375" cy="175" rx="96" ry="58" fill="#E3F7ED" stroke="#1A9E5A" stroke-width="1.5"/>
+      <text x="405" y="165" text-anchor="middle" font-size="12" font-weight="700" fill="#1A9E5A" font-family="Noto Sans JP,sans-serif">ひし形</text>
+
+      <!-- 正方形（中央・最小） -->
+      <ellipse cx="300" cy="185" rx="54" ry="36" fill="#FDEAEA" stroke="#D63B3B" stroke-width="2"/>
+      <text x="300" y="190" text-anchor="middle" font-size="12" font-weight="700" fill="#D63B3B" font-family="Noto Sans JP,sans-serif">正方形</text>
+
+      <!-- 凡例ラベル（右下） -->
+      <rect x="428" y="245" width="164" height="38" rx="6" fill="#f6f5f0" stroke="#ccc" stroke-width="1"/>
+      <line x1="438" y1="259" x2="464" y2="259" stroke="#888" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <text x="474" y="263" font-size="11" fill="#555" font-family="Noto Sans JP,sans-serif">…の中に含まれる</text>
+    </svg>
+
+    <div class="tip" style="background:var(--teal-l);">
+      <span class="tip-icon">💡</span>
+      <span>正方形は<strong>長方形の仲間でもあり、ひし形の仲間でもある</strong>！一番条件が多い特別な四角形。</span>
+    </div>
+  </div>
+</div>
+
+<!-- ⑤ 対角線の特ちょう -->
+<div class="section">
+  <div class="sec-label">
+    <div class="num-bubble" style="background:var(--gold);color:white;">⑤</div>
+    <div class="sec-title">対角線（たいかくせん）の特ちょう</div>
+  </div>
+  <div class="card">
+    <div class="big-point" style="background:var(--gold-l);border-color:var(--gold);">
+      向かい合う頂点を結んだ直線を<strong>「対角線」</strong>という。<br>
+      四角形の種類によって、対角線の長さや交わり方が違う！
+    </div>
+
+    <div class="svg-label">✏️ それぞれの対角線の特ちょう</div>
+    <!--
+      4種類（平行四辺形・ひし形・長方形・正方形）を2×2で並べる
+      viewBox="0 0 580 300"
+      左上:平行四辺形 右上:ひし形 左下:長方形 右下:正方形
+      各セルW=270 H=140, gap=20
+    -->
+    <svg width="100%" viewBox="0 0 580 310" style="display:block;">
+
+      <!-- ===== 平行四辺形（左上） ===== -->
+      <rect x="10" y="10" width="265" height="135" rx="10" fill="#EAF0FF" stroke="#2563C4" stroke-width="1.2"/>
+      <!-- 図形 -->
+      <polygon points="40,110 130,110 155,45 65,45" fill="none" stroke="#2563C4" stroke-width="2" stroke-linejoin="round"/>
+      <!-- 対角線 -->
+      <line x1="40" y1="110" x2="155" y2="45" stroke="#D63B3B" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <line x1="130" y1="110" x2="65" y2="45" stroke="#D63B3B" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <!-- 中点マーク -->
+      <circle cx="97" cy="77" r="5" fill="#D63B3B"/>
+      <!-- ラベルエリア -->
+      <rect x="168" y="22" width="98" height="112" rx="7" fill="white" fill-opacity="0.7"/>
+      <text x="217" y="44" text-anchor="middle" font-size="13" font-weight="700" fill="#2563C4" font-family="Noto Sans JP,sans-serif">平行四辺形</text>
+      <text x="174" y="66" font-size="11" fill="#333" font-family="Noto Sans JP,sans-serif">・長さは</text>
+      <text x="174" y="82" font-size="11" fill="#333" font-family="Noto Sans JP,sans-serif">　ちがう</text>
+      <text x="174" y="100" font-size="11" fill="#1A9E5A" font-weight="700" font-family="Noto Sans JP,sans-serif">・中点で交わる</text>
+      <text x="174" y="118" font-size="11" fill="#555" font-family="Noto Sans JP,sans-serif">（二等分する）</text>
+
+      <!-- ===== ひし形（右上） ===== -->
+      <rect x="305" y="10" width="265" height="135" rx="10" fill="#E3F7ED" stroke="#1A9E5A" stroke-width="1.2"/>
+      <!-- ひし形図形 -->
+      <polygon points="390,45 450,77 390,110 330,77" fill="none" stroke="#1A9E5A" stroke-width="2" stroke-linejoin="round"/>
+      <!-- 対角線 -->
+      <line x1="390" y1="45" x2="390" y2="110" stroke="#D63B3B" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <line x1="330" y1="77" x2="450" y2="77" stroke="#D63B3B" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <!-- 直角マーク -->
+      <path d="M390 77 L390 66 L401 66 L401 77" fill="none" stroke="#555" stroke-width="1.5" stroke-linejoin="miter"/>
+      <!-- ラベルエリア -->
+      <rect x="460" y="22" width="100" height="112" rx="7" fill="white" fill-opacity="0.7"/>
+      <text x="510" y="44" text-anchor="middle" font-size="13" font-weight="700" fill="#1A9E5A" font-family="Noto Sans JP,sans-serif">ひし形</text>
+      <text x="466" y="66" font-size="11" fill="#333" font-family="Noto Sans JP,sans-serif">・長さは</text>
+      <text x="466" y="82" font-size="11" fill="#333" font-family="Noto Sans JP,sans-serif">　ちがう</text>
+      <text x="466" y="100" font-size="11" fill="#D63B3B" font-weight="700" font-family="Noto Sans JP,sans-serif">・垂直に交わる</text>
+      <text x="466" y="118" font-size="11" fill="#1A9E5A" font-weight="700" font-family="Noto Sans JP,sans-serif">・中点で交わる</text>
+
+      <!-- ===== 長方形（左下） ===== -->
+      <rect x="10" y="160" width="265" height="140" rx="10" fill="#F0EBFA" stroke="#7048A8" stroke-width="1.2"/>
+      <!-- 長方形図形 -->
+      <rect x="35" y="175" width="120" height="80" fill="none" stroke="#7048A8" stroke-width="2"/>
+      <!-- 対角線 -->
+      <line x1="35" y1="175" x2="155" y2="255" stroke="#D63B3B" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <line x1="155" y1="175" x2="35" y2="255" stroke="#D63B3B" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <!-- 長さ等しいマーク -->
+      <circle cx="95" cy="215" r="5" fill="#D63B3B"/>
+      <!-- ラベルエリア -->
+      <rect x="168" y="172" width="98" height="120" rx="7" fill="white" fill-opacity="0.7"/>
+      <text x="217" y="194" text-anchor="middle" font-size="13" font-weight="700" fill="#7048A8" font-family="Noto Sans JP,sans-serif">長方形</text>
+      <text x="174" y="216" font-size="11" fill="#7048A8" font-weight="700" font-family="Noto Sans JP,sans-serif">・長さが等しい</text>
+      <text x="174" y="234" font-size="11" fill="#1A9E5A" font-weight="700" font-family="Noto Sans JP,sans-serif">・中点で交わる</text>
+      <text x="174" y="254" font-size="11" fill="#555" font-family="Noto Sans JP,sans-serif">（垂直ではない）</text>
+
+      <!-- ===== 正方形（右下） ===== -->
+      <rect x="305" y="160" width="265" height="140" rx="10" fill="#FDEAEA" stroke="#D63B3B" stroke-width="1.2"/>
+      <!-- 正方形図形 -->
+      <rect x="330" y="175" width="96" height="96" fill="none" stroke="#D63B3B" stroke-width="2"/>
+      <!-- 対角線 -->
+      <line x1="330" y1="175" x2="426" y2="271" stroke="#D63B3B" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <line x1="426" y1="175" x2="330" y2="271" stroke="#D63B3B" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <!-- 直角マーク（対角線に合わせて45°回転） -->
+      <path d="M386,215 L378,207 L370,215" fill="none" stroke="#555" stroke-width="1.5" stroke-linejoin="miter"/>
+      <circle cx="378" cy="223" r="5" fill="#D63B3B"/>
+      <!-- ラベルエリア -->
+      <rect x="435" y="172" width="126" height="120" rx="7" fill="white" fill-opacity="0.7"/>
+      <text x="498" y="194" text-anchor="middle" font-size="13" font-weight="700" fill="#D63B3B" font-family="Noto Sans JP,sans-serif">正方形</text>
+      <text x="441" y="216" font-size="11" fill="#7048A8" font-weight="700" font-family="Noto Sans JP,sans-serif">・長さが等しい</text>
+      <text x="441" y="234" font-size="11" fill="#D63B3B" font-weight="700" font-family="Noto Sans JP,sans-serif">・垂直に交わる</text>
+      <text x="441" y="254" font-size="11" fill="#1A9E5A" font-weight="700" font-family="Noto Sans JP,sans-serif">・中点で交わる</text>
+    </svg>
+
+    <div class="tip" style="background:var(--gold-l);">
+      <span class="tip-icon">⭐</span>
+      <span>対角線が<strong>「垂直・等しい・中点で交わる」</strong>の3条件をすべて満たすのは<strong>正方形だけ</strong>！</span>
+    </div>
+  </div>
+</div>
+
+<!-- まとめ -->
+<div class="summary-card">
+  <div class="summary-title">📝 この単元のまとめ</div>
+  <div class="sum-item"><div class="sum-dot"></div><div>２直線が直角（90°）で交わるとき<strong>「垂直」</strong>、交わらないとき<strong>「平行」</strong>という</div></div>
+  <div class="sum-item"><div class="sum-dot"></div><div>平行な直線は<strong>どこも間かくが同じ</strong>で、１本の直線に垂直な２直線はたがいに平行</div></div>
+  <div class="sum-item"><div class="sum-dot"></div><div><strong>台形</strong>：１組の辺が平行／<strong>平行四辺形</strong>：２組の辺が平行で向かいの辺と角が等しい</div></div>
+  <div class="sum-item"><div class="sum-dot"></div><div><strong>ひし形</strong>：４辺すべて等しい／<strong>長方形</strong>：全角90°／<strong>正方形</strong>：全辺等しく全角90°</div></div>
+  <div class="sum-item"><div class="sum-dot"></div><div>正方形は<strong>長方形でもひし形でも</strong>ある特別な四角形</div></div>
+  <div class="sum-item"><div class="sum-dot"></div><div>対角線が<strong>垂直に交わる</strong>のはひし形・正方形、<strong>長さが等しい</strong>のは長方形・正方形</div></div>
+  <div class="sum-item"><div class="sum-dot"></div><div>三角定規を使って<strong>垂直・平行をかいたり調べたり</strong>できる</div></div>
+</div>
+
+</div><!-- /container -->
+</body>
+</html>
